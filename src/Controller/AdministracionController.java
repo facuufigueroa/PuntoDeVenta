@@ -36,6 +36,8 @@ public class AdministracionController implements ActionListener{
        agregarProducto(e);
        editarProducto(e);
        modificarProducto(e);
+       borrarProducto(e);
+
     }
 
    
@@ -53,19 +55,15 @@ public class AdministracionController implements ActionListener{
                 producto.setNombre(adminView.txtNombre.getText());
                 producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
                 query.agregarProducto(producto);
+                JOptionPane.showMessageDialog(null,"Producto: '"+adminView.txtNombre.getText()+"' registrado exitosamente");
                 iniciarJTable();
+                limpiarTxt();
             }
             else{
                 JOptionPane.showMessageDialog(null,"Hay campos vacios, rellene los campos para agregar el producto");
             }
         } else {
         }   
-    }
-    
-    public boolean verificarVacios(){
-        return adminView.txtCodigo.getText().isEmpty() 
-                && adminView.txtNombre.getText().isEmpty()
-                && adminView.txtPrecio.getText().isEmpty();
     }
     
     public void iniciarJTable() {
@@ -110,8 +108,7 @@ public class AdministracionController implements ActionListener{
     public void modificarProducto(ActionEvent e) {
 
         if (e.getSource() == adminView.btnModificar) {
-            
-        
+           
             if (!verificarVacios()) {
                 Producto producto = new Producto();
                 producto.setCodigo(adminView.txtCodigo.getText());
@@ -121,17 +118,73 @@ public class AdministracionController implements ActionListener{
                 if (query.editar(producto)) {
                     JOptionPane.showMessageDialog(null, "Producto modificado exitosamente", "Modifcar Producto", 3);
                     iniciarJTable();
-                    
+                    limpiarTxt();
+                    adminView.txtCodigo.setEditable(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Error al modificar producto");
 
                 }
             } else {
-                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:20px\">PARA MODIFICAR EMPLEADO LOS CAMPOS NO DEBEN ESTAR VACIOS</p/</html>", "ERROR AL MODIFICAR", 0);
+                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Para modificar productos los campos no deben estar vacios</p/</html>", "ERROR AL MODIFICAR", 0);
             }
 
         }
     }
+    
+    public boolean verificarVacios(){
+        return adminView.txtCodigo.getText().isEmpty() 
+                || adminView.txtNombre.getText().isEmpty()
+                || adminView.txtPrecio.getText().isEmpty();
+    }
+    
+    public void limpiarTxt(){
+        adminView.txtCodigo.setText("");
+        adminView.txtNombre.setText("");
+        adminView.txtPrecio.setText("");
+    }
+    
+    public void borrarProducto(ActionEvent e) {
+
+        if (e.getSource() == adminView.btnEliminar) {
+            Producto producto = new Producto();
+            String botones[] = {"Aceptar", "Cancelar"};
+            int fila = adminView.tablaProductos.getSelectedRow();
+
+            if (fila >= 0) {
+                int eleccion = JOptionPane.showOptionDialog(adminView, "¿Desea eliminar el prodcuto: " + adminView.tablaProductos.getValueAt(fila, 1).toString().toUpperCase() + " ?", "Eliminar Producto", 0, 0, null, botones, this);
+
+                if (eleccion == JOptionPane.YES_OPTION) {
+                    producto.setCodigo(adminView.tablaProductos.getValueAt(fila, 0).toString());
+
+                    if (query.borrar(producto)) {
+                        JOptionPane.showMessageDialog(null, adminView.tablaProductos.getValueAt(fila, 1).toString() + " " + "eliminado");
+                        iniciarJTable();
+                    }
+                } else if (eleccion == JOptionPane.NO_OPTION) {
+                    JOptionPane.showMessageDialog(null, "Se ha cancelado operación");
+                    limpiarTxt();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Por favor, seleccione producto a eliminar en la tabla");
+            }
+
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public Querys getQuery() {
         return query;

@@ -106,7 +106,7 @@ public class Querys extends ConexionBD{
         return id_producto;
     }
     
-   public void listarProductos(DefaultTableModel model){
+    public void listarProductos(DefaultTableModel model){
        Connection conn = conexion.getConnection();
         Statement st;
         String[] dato = new String[3];
@@ -132,7 +132,7 @@ public class Querys extends ConexionBD{
 
    }
    
-   public boolean editar(Producto producto) {
+    public boolean editar(Producto producto) {
         PreparedStatement ps = null;
         Connection con = getConnection();
 
@@ -159,5 +159,27 @@ public class Querys extends ConexionBD{
         }
     }
    
-    
+    public boolean borrar(Producto producto) {
+        PreparedStatement ps = null;
+        Connection conn = getConnection();
+        String sql = "DELETE FROM producto WHERE codigo = ?";
+
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, producto.getCodigo());
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+
+            System.err.println(e);
+            return false;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+
+        }
+    }
 }

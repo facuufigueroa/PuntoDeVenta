@@ -1,17 +1,13 @@
 package puntodeventa;
 
-import DataBase.ConexionBD;
-import View.MenuPrincipalView;
-
-
+import Controller.MainController;
 public class bruyen {
 
     
     public static void main(String[] args) {
-       MenuPrincipalView menu = new MenuPrincipalView();
-       menu.setVisible(true);
-       ConexionBD conex = new ConexionBD();
-       ConexionBD.getConnection();
+       MainController mainController = new MainController();
+       mainController.loadMenuPrincipal();
+       
     }
     
 }

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import static java.lang.Integer.parseInt;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 public class AdministracionController implements ActionListener{
@@ -14,7 +15,9 @@ public class AdministracionController implements ActionListener{
     private Querys query = new Querys();
     
     private AdministracionView adminView= new AdministracionView();
-
+    
+    private DefaultTableModel modelo = new DefaultTableModel();
+    
     public AdministracionController() {
         
         adminView.btnAgregar.addActionListener(this);
@@ -23,6 +26,7 @@ public class AdministracionController implements ActionListener{
         this.adminView.btnExportar.addActionListener(this);
         this.adminView.btnModificar.addActionListener(this);
         this.adminView.txtBuscar.addActionListener(this);
+        iniciarJTable();
     }
 
    
@@ -34,7 +38,7 @@ public class AdministracionController implements ActionListener{
 
    
     
-     public void loadAdminView(){
+    public void loadAdminView(){
        adminView.setVisible(true);
        adminView.setLocationRelativeTo(null);
     }
@@ -47,6 +51,7 @@ public class AdministracionController implements ActionListener{
                 producto.setNombre(adminView.txtNombre.getText());
                 producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
                 query.agregarProducto(producto);
+                iniciarJTable();
             }
             else{
                 JOptionPane.showMessageDialog(null,"Hay campos vacios, rellene los campos para agregar el producto");
@@ -61,7 +66,25 @@ public class AdministracionController implements ActionListener{
                 && adminView.txtPrecio.getText().isEmpty();
     }
     
-    
+    public void iniciarJTable() {
+        modelo = new DefaultTableModel(){
+            public boolean isCellEditable(int fila, int columna){
+                if(columna == 1 && columna == 2 && columna == 3){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        };
+        modelo.addColumn("CODIGO");
+        modelo.addColumn("NOMBRE");
+        modelo.addColumn("PRECIO");
+        
+        adminView.tablaProductos.setRowHeight(30);
+        adminView.tablaProductos.setModel(modelo);
+        query.listarProductos(modelo);
+    }
     
     
     public Querys getQuery() {

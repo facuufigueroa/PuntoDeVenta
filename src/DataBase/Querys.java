@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
 
 public class Querys extends ConexionBD{
     
@@ -103,5 +105,31 @@ public class Querys extends ConexionBD{
 
         return id_producto;
     }
+    
+   public void listarProductos(DefaultTableModel model){
+       Connection conn = conexion.getConnection();
+        Statement st;
+        String[] dato = new String[3];
+
+        try {
+            String sql = "SELECT * FROM producto ORDER BY nombre ";
+
+            st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+
+                dato[0] = rs.getString(2);
+                dato[1] = rs.getString(3);
+                dato[2] = rs.getString(1);
+                model.addRow(dato);
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+   }
     
 }

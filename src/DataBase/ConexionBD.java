@@ -16,7 +16,6 @@ public class ConexionBD {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             con =(Connection) DriverManager.getConnection(URL,USERNAME,PASSWORD);
-            System.out.println("ConexionExitosa");
         }catch(Exception e){
             System.out.println(e);
             

@@ -34,6 +34,8 @@ public class AdministracionController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
        agregarProducto(e);
+       editarProducto(e);
+       modificarProducto(e);
     }
 
    
@@ -86,6 +88,50 @@ public class AdministracionController implements ActionListener{
         query.listarProductos(modelo);
     }
     
+    public void editarProducto(ActionEvent e) {
+        if (e.getSource() == adminView.btnEditar) {
+            int fila = adminView.tablaProductos.getSelectedRow();
+
+            if (fila >= 0) {
+                Producto producto = new Producto();
+                producto.setCodigo(adminView.tablaProductos.getValueAt(fila, 0).toString());
+                producto.setNombre(adminView.tablaProductos.getValueAt(fila, 1).toString());
+                producto.setPrecio(parseInt(adminView.tablaProductos.getValueAt(fila, 2).toString()));
+                adminView.txtCodigo.setText(producto.getCodigo());
+                adminView.txtNombre.setText(producto.getNombre());
+                adminView.txtPrecio.setText(String.valueOf(producto.getPrecio()));
+                adminView.txtCodigo.setEditable(false);
+            } else {
+                JOptionPane.showMessageDialog(null, "Fila no seleccionada, seleccione fila de la tabla");
+            }
+        }
+    }
+    
+    public void modificarProducto(ActionEvent e) {
+
+        if (e.getSource() == adminView.btnModificar) {
+            
+        
+            if (!verificarVacios()) {
+                Producto producto = new Producto();
+                producto.setCodigo(adminView.txtCodigo.getText());
+                producto.setNombre(adminView.txtNombre.getText());
+                producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
+                producto.setId(query.traer_id_producto(adminView.txtCodigo.getText()));
+                if (query.editar(producto)) {
+                    JOptionPane.showMessageDialog(null, "Producto modificado exitosamente", "Modifcar Producto", 3);
+                    iniciarJTable();
+                    
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al modificar producto");
+
+                }
+            } else {
+                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:20px\">PARA MODIFICAR EMPLEADO LOS CAMPOS NO DEBEN ESTAR VACIOS</p/</html>", "ERROR AL MODIFICAR", 0);
+            }
+
+        }
+    }
     
     public Querys getQuery() {
         return query;

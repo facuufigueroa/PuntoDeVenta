@@ -121,7 +121,7 @@ public class Querys extends ConexionBD{
 
                 dato[0] = rs.getString(2);
                 dato[1] = rs.getString(3);
-                dato[2] = rs.getString(1);
+                dato[2] = rs.getString(4);
                 model.addRow(dato);
 
             }
@@ -131,5 +131,33 @@ public class Querys extends ConexionBD{
         }
 
    }
+   
+   public boolean editar(Producto producto) {
+        PreparedStatement ps = null;
+        Connection con = getConnection();
+
+        String sql = "UPDATE producto SET codigo = ?, nombre = ? , precio = ? WHERE idproducto = ?";
+
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, producto.getCodigo());
+            ps.setString(2, producto.getNombre().toUpperCase());
+            ps.setInt(3, producto.getPrecio());
+            ps.setInt(4, producto.getId());
+
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        }
+    }
+   
     
 }

@@ -1,25 +1,38 @@
 package Model;
 
-import java.math.BigInteger;
-
 
 public class Producto {
     
-    private BigInteger codigo;
+    private String codigo;
     private String nombre;
     private int precio;
+    private int id;
 
-    public Producto(BigInteger codigo, String nombre, int precio) {
+    public Producto(String codigo, String nombre, int precio,int id) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
+        this.id=id;
     }
 
-    public BigInteger getCodigo() {
+    public Producto() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
+
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(BigInteger codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 

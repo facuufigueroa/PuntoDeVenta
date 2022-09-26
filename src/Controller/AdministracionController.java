@@ -39,6 +39,8 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.adminView.btnModificar.addActionListener(this);
         this.adminView.txtBuscarPorCodigo.addKeyListener(accionEnterBuscarPorCodigo());
         this.adminView.txtBuscarPorNombre.addKeyListener(this);
+        this.adminView.btnLimpiarBusqueda.addActionListener(this);
+        this.adminView.btnVaciarCampos.addActionListener(this);
         iniciarJTable();
         
     }
@@ -54,11 +56,15 @@ public class AdministracionController implements ActionListener,KeyListener{
        editarProducto(e);
        modificarProducto(e);
        borrarProducto(e);
-       
-    
+       limpiarBusquedas(e);
+       limpiarCampos(e);
     }
     
-    
+    public void limpiarCampos(ActionEvent e){
+        if(e.getSource() == adminView.btnVaciarCampos){
+            limpiarTxt();
+        }
+    }
     
   
     public void loadAdminView(){
@@ -70,21 +76,28 @@ public class AdministracionController implements ActionListener,KeyListener{
     
     public void agregarProducto(ActionEvent e){
         Producto producto = new Producto();
+        String codigo = adminView.txtCodigo.getText();
+        
         if(e.getSource() == adminView.btnAgregar){
-            if(!verificarVacios()){
-                producto.setCodigo(adminView.txtCodigo.getText());
-                producto.setNombre(adminView.txtNombre.getText());
-                producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
-                query.agregarProducto(producto);
-                JOptionPane.showMessageDialog(null,"Producto: '"+adminView.txtNombre.getText()+"' registrado exitosamente");
-                iniciarJTable();
-                limpiarTxt();
-            }
-            else{
-                JOptionPane.showMessageDialog(null,"Hay campos vacios, rellene los campos para agregar el producto");
-            }
-        } else {
-        }   
+                if(!query.verificarCodigoExistente(codigo)){
+                    if(!verificarVacios()){
+                        producto.setCodigo(adminView.txtCodigo.getText());
+                        producto.setNombre(adminView.txtNombre.getText());
+                        producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
+                        query.agregarProducto(producto);
+                        JOptionPane.showMessageDialog(null,"Producto: '"+adminView.txtNombre.getText()+"' registrado exitosamente");
+                        iniciarJTable();
+                        limpiarTxt();
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">Hay campos vacios, rellene los campos para agregar el producto </p></html");
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">No es posible agregar el producto,el codigo: "+codigo+" ya se encuentra en el sistema. Escribir otro codigo </p></html","Producto ya registrado",0);
+                }
+        }
+        
     }
     
     public void iniciarJTable() {
@@ -138,15 +151,14 @@ public class AdministracionController implements ActionListener,KeyListener{
                 producto.setNombre(adminView.tablaProductos.getValueAt(fila, 1).toString());
                 String precioCon$ = adminView.tablaProductos.getValueAt(fila, 2).toString();
                 int preciosin$ = parseInt(precioCon$.substring(1,precioCon$.length()));
-                
-                //producto.setPrecio(parseInt(adminView.tablaProductos.getValueAt(fila, 2).toString()));
+           
                 producto.setPrecio(preciosin$);
                 adminView.txtCodigo.setText(producto.getCodigo());
                 adminView.txtNombre.setText(producto.getNombre());
                 adminView.txtPrecio.setText(String.valueOf(producto.getPrecio()));
                 adminView.txtCodigo.setEditable(false);
             } else {
-                JOptionPane.showMessageDialog(null, "Fila no seleccionada, seleccione fila de la tabla");
+                JOptionPane.showMessageDialog(null, "<html><p style = \"font:15px\">Fila no seleccionada, seleccione fila de la tabla</p></html>");
             }
         }
     }
@@ -183,6 +195,7 @@ public class AdministracionController implements ActionListener,KeyListener{
                 || adminView.txtPrecio.getText().isEmpty();
     }
     
+    /*Limpia los campos para agregar y modificar*/
     public void limpiarTxt(){
         adminView.txtCodigo.setText("");
         adminView.txtNombre.setText("");
@@ -197,7 +210,7 @@ public class AdministracionController implements ActionListener,KeyListener{
             int fila = adminView.tablaProductos.getSelectedRow();
 
             if (fila >= 0) {
-                int eleccion = JOptionPane.showOptionDialog(adminView, "¿Desea eliminar el prodcuto: " + adminView.tablaProductos.getValueAt(fila, 1).toString().toUpperCase() + " ?", "Eliminar Producto", 0, 0, null, botones, this);
+                int eleccion = JOptionPane.showOptionDialog(adminView, "<html><p style = \"font:15px\">¿Desea eliminar el producto: " + adminView.tablaProductos.getValueAt(fila, 1).toString().toUpperCase() + " ? </p></html>", "Eliminar Producto", 0, 0, null, botones, this);
                 if (eleccion == JOptionPane.YES_OPTION) {
                     producto.setCodigo(adminView.tablaProductos.getValueAt(fila, 0).toString());
 
@@ -206,25 +219,17 @@ public class AdministracionController implements ActionListener,KeyListener{
                         iniciarJTable();
                     }
                 } else if (eleccion == JOptionPane.NO_OPTION) {
-                    JOptionPane.showMessageDialog(null, "Se ha cancelado operación");
+                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:15px\">Se ha cancelado operación</p></html>","Se canceló operación",1);
                     limpiarTxt();
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Por favor, seleccione producto a eliminar en la tabla");
+                JOptionPane.showMessageDialog(null, "<html><p style = \"font:15px\">Por favor, seleccione producto a eliminar en la tabla</p></html>");
             }
 
         }
     }
     
     
-    public Querys getQuery() {
-        return query;
-    }
-
-    public void setQuery(Querys query) {
-        this.query = query;
-    }
-
     public void busquedaFiltrada(KeyEvent k){
        
             Connection conn = conexion.getConnection();
@@ -279,7 +284,8 @@ public class AdministracionController implements ActionListener,KeyListener{
                 adminView.txtBuscarPorCodigo.setText(null);
 
             } else {
-                JOptionPane.showMessageDialog(null, "NO EXISTE PRODUCTO", "ERROR AL BUSCAR", 0);
+                JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\"> El producto no está registrado o el codigo esta mal escrito ¡Verifique el codigo! </p></html","PRODUCTO NO ENCONTRADO",0);
+
             }
     }
 
@@ -288,6 +294,12 @@ public class AdministracionController implements ActionListener,KeyListener{
         adminView.txtNombre.setText("");
         adminView.txtPrecio.setText("");
         adminView.txtBuscarPorCodigo.setText("");
+        adminView.txtBuscarPorNombre.setText("");
+    }
+    
+    public void vaciarTxtsBuscar(){
+        adminView.txtBuscarPorCodigo.setText("");
+        adminView.txtBuscarPorNombre.setText("");
     }
 
     public KeyListener accionEnterBuscarPorCodigo (){
@@ -295,48 +307,27 @@ public class AdministracionController implements ActionListener,KeyListener{
         KeyListener k = new KeyListener(){
             @Override
             public void keyTyped(KeyEvent e) {
-              
             }
-
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     busquedaPorCodigo();
                 }
             }
-
             @Override
             public void keyReleased(KeyEvent e) {
             }
-  
             };
             return k;
     }
     
-    public KeyListener accionEnterBuscarPorNombre (){
-        
-        KeyListener k = new KeyListener(){
-            @Override
-            public void keyTyped(KeyEvent e) {
-              
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    busquedaPorCodigo();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-  
-            };
-            return k;
+                 
+    public void limpiarBusquedas(ActionEvent e){
+        if(e.getSource() == adminView.btnLimpiarBusqueda){
+            vaciarTxtsBuscar();
+            iniciarJTable();
+        }
     }
-                
-    
     
     
     @Override
@@ -346,6 +337,16 @@ public class AdministracionController implements ActionListener,KeyListener{
     @Override
     public void keyPressed(KeyEvent e){
     }
+    
+    
+    public Querys getQuery() {
+        return query;
+    }
+
+    public void setQuery(Querys query) {
+        this.query = query;
+    }
+
     
     
 }

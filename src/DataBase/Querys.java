@@ -88,7 +88,22 @@ public class Querys extends ConexionBD{
         return producto;
     }
     
-    
+    public boolean verificarCodigoExistente(String codigo){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection conn = getConnection();
+        String sql = "SELECT * FROM producto WHERE codigo = '" + codigo + "'";
+        try {
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        }catch (Exception e) {
+                System.err.println(e);
+        } 
+        return false;
+    }
 
     
     

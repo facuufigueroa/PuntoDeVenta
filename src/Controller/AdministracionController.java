@@ -43,6 +43,7 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.adminView.btnVaciarCampos.addActionListener(this);
         iniciarJTable();
         
+        
     }
 
    @Override
@@ -72,6 +73,7 @@ public class AdministracionController implements ActionListener,KeyListener{
        iniciarJTable(); //Esta llamada es por si el usuario cierra la ventana pero no el programa
        adminView.setVisible(true);
        adminView.setLocationRelativeTo(null);
+       adminView.txtCodigo.setEditable(true);
     }
     
     public void agregarProducto(ActionEvent e){
@@ -85,12 +87,12 @@ public class AdministracionController implements ActionListener,KeyListener{
                         producto.setNombre(adminView.txtNombre.getText());
                         producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
                         query.agregarProducto(producto);
-                        JOptionPane.showMessageDialog(null,"Producto: '"+adminView.txtNombre.getText()+"' registrado exitosamente");
+                        JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">Producto: '"+adminView.txtNombre.getText()+"' registrado exitosamente</p></html>");
                         iniciarJTable();
                         limpiarTxt();
                     }
                     else{
-                        JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">Hay campos vacios, rellene los campos para agregar el producto </p></html");
+                        JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">Hay campos vacios, rellene los campos para agregar el producto </p></html>");
                     }
                 }
                 else{
@@ -200,6 +202,7 @@ public class AdministracionController implements ActionListener,KeyListener{
         adminView.txtCodigo.setText("");
         adminView.txtNombre.setText("");
         adminView.txtPrecio.setText("");
+        adminView.txtCodigo.setEditable(true);
     }
     
     public void borrarProducto(ActionEvent e) {

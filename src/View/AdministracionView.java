@@ -10,6 +10,7 @@ public class AdministracionView extends javax.swing.JFrame {
     
     public AdministracionView() {
         initComponents();
+       
     }
     
     @Override

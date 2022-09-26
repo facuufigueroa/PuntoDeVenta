@@ -65,7 +65,7 @@ public class Querys extends ConexionBD{
         Connection conn = getConnection();
         Producto producto = new Producto();
 
-        String sql = "SELECT * FROM producto WHERE codigo = '" + codigo + "'";
+        String sql = "SELECT * FROM producto WHERE codigo = '" + codigo + "' ORDER BY nombre";
 
         try {
             ps = conn.prepareStatement(sql);

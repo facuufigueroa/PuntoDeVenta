@@ -280,7 +280,7 @@ public class AdministracionController implements ActionListener,KeyListener{
 
                 dato[0] = producto.getCodigo();
                 dato[1] = producto.getNombre();
-                dato[2] = String.valueOf(producto.getPrecio());
+                dato[2] = String.valueOf("$"+producto.getPrecio());
                 
                 modelo.addRow(dato);
                 iniciarJTableBusqueda(modelo,dato);

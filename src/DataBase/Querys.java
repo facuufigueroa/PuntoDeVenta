@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Querys extends ConexionBD{
@@ -57,9 +58,39 @@ public class Querys extends ConexionBD{
         }
     }
     
-    public void buscarProducto(String codigo){
-        
+    public Producto buscarPorCodigo(String codigo){
+        String[] dato = new String[3];
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection conn = getConnection();
+        Producto producto = new Producto();
+
+        String sql = "SELECT * FROM producto WHERE codigo = '" + codigo + "'";
+
+        try {
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                producto.setCodigo(rs.getString("codigo"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio(rs.getInt("precio"));
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+            return null;
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+        return producto;
     }
+    
+    
+
+    
     
     public void modificarProducto(Producto producto, String idproducto){
         PreparedStatement ps = null;
@@ -121,7 +152,7 @@ public class Querys extends ConexionBD{
 
                 dato[0] = rs.getString(2);
                 dato[1] = rs.getString(3);
-                dato[2] = rs.getString(4);
+                dato[2] = "$"+rs.getString(4);
                 model.addRow(dato);
 
             }

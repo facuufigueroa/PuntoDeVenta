@@ -168,26 +168,29 @@ public class AdministracionController implements ActionListener,KeyListener{
     public void modificarProducto(ActionEvent e) {
 
         if (e.getSource() == adminView.btnModificar) {
-           
+            if(query.verificarCodigoExistente(adminView.txtCodigo.getText())){   
             if (!verificarVacios()) {
-                Producto producto = new Producto();
-                producto.setCodigo(adminView.txtCodigo.getText());
-                producto.setNombre(adminView.txtNombre.getText());
-                producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
-                producto.setId(query.traer_id_producto(adminView.txtCodigo.getText()));
-                if (query.editar(producto)) {
-                    JOptionPane.showMessageDialog(null, "Producto modificado exitosamente", "Modifcar Producto", 3);
-                    iniciarJTable();
-                    limpiarTxt();
-                    adminView.txtCodigo.setEditable(true);
+                    Producto producto = new Producto();
+                    producto.setCodigo(adminView.txtCodigo.getText());
+                    producto.setNombre(adminView.txtNombre.getText());
+                    producto.setPrecio(parseInt(adminView.txtPrecio.getText()));
+                    producto.setId(query.traer_id_producto(adminView.txtCodigo.getText()));
+                        if (query.editar(producto)) {
+                            JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Producto modificado exitosamente</p/</html>", "Modifcar Producto", 3);
+                            iniciarJTable();
+                            limpiarTxt();
+                            adminView.txtCodigo.setEditable(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al modificar producto");
+
+                        }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error al modificar producto");
-
+                        JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Para modificar productos los campos no deben estar vacios</p/</html>", "ERROR AL MODIFICAR", 0);
                 }
-            } else {
-                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Para modificar productos los campos no deben estar vacios</p/</html>", "ERROR AL MODIFICAR", 0);
-            }
-
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">¡No existe el producto! Para modificar el producto debe estar registrado! <br/> En todo caso lo debe agregar a la lista con el boton 'AGREGAR' </p/</html>", "NO EXISTE PRODUCTO", 0);
+        }
         }
     }
     
@@ -218,7 +221,7 @@ public class AdministracionController implements ActionListener,KeyListener{
                     producto.setCodigo(adminView.tablaProductos.getValueAt(fila, 0).toString());
 
                     if (query.borrar(producto)) {
-                        JOptionPane.showMessageDialog(null, adminView.tablaProductos.getValueAt(fila, 1).toString() + " " + "eliminado");
+                        JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">El producto '"+adminView.tablaProductos.getValueAt(fila, 1).toString() + "' se ha eliminado");
                         iniciarJTable();
                     }
                 } else if (eleccion == JOptionPane.NO_OPTION) {

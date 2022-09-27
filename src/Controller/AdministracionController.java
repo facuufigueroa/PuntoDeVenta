@@ -41,6 +41,7 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.adminView.txtBuscarPorNombre.addKeyListener(this);
         this.adminView.btnLimpiarBusqueda.addActionListener(this);
         this.adminView.btnVaciarCampos.addActionListener(this);
+        adminView.addKeyListener(prueba());
         iniciarJTable();
         
         
@@ -49,6 +50,7 @@ public class AdministracionController implements ActionListener,KeyListener{
    @Override
     public void keyReleased(KeyEvent e) {
         busquedaFiltrada(e);
+      
     }
     
     @Override
@@ -96,7 +98,7 @@ public class AdministracionController implements ActionListener,KeyListener{
                     }
                 }
                 else{
-                    JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">No es posible agregar el producto,el codigo: "+codigo+" ya se encuentra en el sistema. Escribir otro codigo </p></html","Producto ya registrado",0);
+                    JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\">No es posible agregar el producto,el codigo: "+codigo+" ya se encuentra en el sistema.</p></html","Producto ya registrado",0);
                 }
         }
         
@@ -338,10 +340,12 @@ public class AdministracionController implements ActionListener,KeyListener{
     
     @Override
     public void keyTyped(KeyEvent e){
+     
     }
 
     @Override
     public void keyPressed(KeyEvent e){
+        
     }
     
     
@@ -352,7 +356,27 @@ public class AdministracionController implements ActionListener,KeyListener{
     public void setQuery(Querys query) {
         this.query = query;
     }
-
     
+    
+    
+    public KeyListener prueba (){
+        
+        KeyListener k;
+        k = new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+                
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                
+            }
+        };
+            return k;
+    }
     
 }

@@ -61,6 +61,9 @@ public class AdministracionView extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                formKeyTyped(evt);
+            }
         });
 
         jLabel2.setFont(new java.awt.Font("Dialog", 3, 18)); // NOI18N
@@ -213,6 +216,11 @@ public class AdministracionView extends javax.swing.JFrame {
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo chico.png"))); // NOI18N
 
         btnPrueba.setText("jButton1");
+        btnPrueba.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPruebaActionPerformed(evt);
+            }
+        });
         btnPrueba.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 btnPruebaKeyPressed(evt);
@@ -392,6 +400,16 @@ public class AdministracionView extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "FUNCIONÓ PERRE");
                 }
     }//GEN-LAST:event_formKeyPressed
+
+    private void btnPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPruebaActionPerformed
+
+    private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+                    JOptionPane.showMessageDialog(null, "FUNCIONÓ PERRE");
+                }
+    }//GEN-LAST:event_formKeyTyped
 
     
     public static void main(String args[]) {

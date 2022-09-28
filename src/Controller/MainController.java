@@ -59,7 +59,7 @@ public class MainController implements ActionListener{
     
    public void accionBtnPVenta(ActionEvent e){
        if(e.getSource() == menuPrincipal.btnPuntoDeVenta){
-            loadPuntoDeVenta();
+            ventaController.loadVentaView();
         }
    }
     

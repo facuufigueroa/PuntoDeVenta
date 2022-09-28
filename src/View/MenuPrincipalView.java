@@ -155,7 +155,6 @@ public class MenuPrincipalView extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnPuntoDeVentaActionPerformed
 
-    
     public static void main(String args[]) {
        
 
@@ -165,6 +164,7 @@ public class MenuPrincipalView extends javax.swing.JFrame {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnAdministracion;

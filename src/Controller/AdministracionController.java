@@ -41,7 +41,6 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.adminView.txtBuscarPorNombre.addKeyListener(this);
         this.adminView.btnLimpiarBusqueda.addActionListener(this);
         this.adminView.btnVaciarCampos.addActionListener(this);
-        adminView.addKeyListener(prueba());
         iniciarJTable();
         
         
@@ -357,26 +356,5 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.query = query;
     }
     
-    
-    
-    public KeyListener prueba (){
-        
-        KeyListener k;
-        k = new KeyListener(){
-            @Override
-            public void keyTyped(KeyEvent e) {
-                
-            }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
-                
-            }
-        };
-            return k;
-    }
     
 }

@@ -255,4 +255,15 @@ public class Querys extends ConexionBD{
     }
             return dato;
     }
+    
+    public String[] listarOtro(DefaultTableModel model, String[] datos){
+        
+        String[] dato= new String[2];
+        dato=datos;
+        
+        model.addRow(dato);
+           
+        return dato;
+    }
+    
 }

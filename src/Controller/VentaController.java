@@ -10,7 +10,7 @@ import static java.lang.Integer.parseInt;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class VentaController implements ActionListener,KeyListener {
+public final class VentaController implements ActionListener,KeyListener {
     
     private Querys query = new Querys();
     
@@ -23,8 +23,10 @@ public class VentaController implements ActionListener,KeyListener {
         this.ventaView.txtPagaCon.addKeyListener(accionPagaCon());
         this.ventaView.btnObtenerVuelto.addActionListener(this);
         ventaView.btnNuevaCompra.addActionListener(this);
+        this.ventaView.btnAgregarOtro.addActionListener(this);
         this.ventaView.txtCodigo.addKeyListener(accionAgregarATabla());
         iniciarTabla();
+        iniciarcomboBoxRapido();
     }
     
        
@@ -32,13 +34,11 @@ public class VentaController implements ActionListener,KeyListener {
         modeloVenta.addColumn("Producto");
         modeloVenta.addColumn("Precio");
         ventaView.tablaProductos.setRowHeight(35);
+        ventaView.tablaProductos.setModel(modeloVenta);
     }
     
     public void listarEnTabla(String codigo){
-        ventaView.tablaProductos.setModel(modeloVenta);
         query.listarProducto(codigo, modeloVenta);
-       
-        
     }
     
     public void loadVentaView(){
@@ -62,6 +62,7 @@ public class VentaController implements ActionListener,KeyListener {
         accionObtenerVuelto(e);
         
         accionNuevaCompra(e);
+        accionAgregarOtro(e);
     }
     
     
@@ -92,8 +93,8 @@ public class VentaController implements ActionListener,KeyListener {
         int t = 0;
         int p1=0;
         String p=null;
-        
-        if(modelo.getRowCount()>0 ){
+       
+        if(modelo.getRowCount()>=0 ){
             for(int i=0;i<modelo.getRowCount();i++){
                 
                 String precioCon$ = ventaView.tablaProductos.getValueAt(i, 1).toString();
@@ -183,9 +184,43 @@ public class VentaController implements ActionListener,KeyListener {
         ventaView.txtTotalAPagar.setText("");
         ventaView.txtPagaCon.setText("");
         ventaView.txtVuelto.setText("");
+        ventaView.cbbNombre.setSelectedItem("");
+        ventaView.txtPrecio.setText(null);
     }
     
     
+    public void accionAgregarOtro(ActionEvent e){
+     
+        String otro [] = new String[2];
+        if(e.getSource() == ventaView.btnAgregarOtro){
+            if(ventaView.cbbNombre.getSelectedIndex() != 0){
+                if(!"".equals(ventaView.txtPrecio.getText())){
+                  
+                    otro[0]=(String) ventaView.cbbNombre.getSelectedItem();
+                    otro[1]= "$"+ventaView.txtPrecio.getText();     
+                    query.listarOtro(modeloVenta, otro);
+                    
+                    sumarTotal(modeloVenta);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Debe poner precio para el producto sin código</p></html>"); 
+
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Debe poner nombre o seleccionar una opción en el listado</p></html>"); 
+            }
+        }
+    }
+
+    
+    public void iniciarcomboBoxRapido(){
+        String[] productosRapidos={"","Carnes","Pan","Alimento"};
+        for(String items : productosRapidos){
+            ventaView.cbbNombre.addItem(items);
+        }
+        
+    }
     
     @Override
     public void keyTyped(KeyEvent e) {

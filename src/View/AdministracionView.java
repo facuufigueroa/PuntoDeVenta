@@ -50,7 +50,6 @@ public class AdministracionView extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         btnVaciarCampos = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        btnPrueba = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administración del Almacen");
@@ -60,6 +59,9 @@ public class AdministracionView extends javax.swing.JFrame {
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                formKeyTyped(evt);
             }
         });
 
@@ -143,7 +145,6 @@ public class AdministracionView extends javax.swing.JFrame {
         });
 
         tablaProductos.setFont(new java.awt.Font("Malgun Gothic", 1, 16)); // NOI18N
-        tablaProductos.setForeground(new java.awt.Color(0, 0, 0));
         tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -212,16 +213,6 @@ public class AdministracionView extends javax.swing.JFrame {
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo chico.png"))); // NOI18N
 
-        btnPrueba.setText("jButton1");
-        btnPrueba.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btnPruebaKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                btnPruebaKeyReleased(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -264,9 +255,7 @@ public class AdministracionView extends javax.swing.JFrame {
                         .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(btnPrueba)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(38, 222, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
@@ -327,14 +316,8 @@ public class AdministracionView extends javax.swing.JFrame {
                             .addComponent(txtBuscarPorNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnLimpiarBusqueda)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnPrueba)
-                                .addGap(41, 41, 41)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
@@ -356,7 +339,11 @@ public class AdministracionView extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecioKeyTyped
 
     private void txtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyTyped
-        
+        int key = evt.getKeyChar();
+        boolean numeros= key >=48 && key<=57;
+        if(!numeros){
+            evt.consume();
+        }
     }//GEN-LAST:event_txtCodigoKeyTyped
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
@@ -379,19 +366,17 @@ public class AdministracionView extends javax.swing.JFrame {
       
     }//GEN-LAST:event_txtBuscarPorCodigoKeyPressed
 
-    private void btnPruebaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnPruebaKeyPressed
-        
-    }//GEN-LAST:event_btnPruebaKeyPressed
-
-    private void btnPruebaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnPruebaKeyReleased
-        
-    }//GEN-LAST:event_btnPruebaKeyReleased
-
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_F1) {
                     JOptionPane.showMessageDialog(null, "FUNCIONÓ PERRE");
                 }
     }//GEN-LAST:event_formKeyPressed
+
+    private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+                    JOptionPane.showMessageDialog(null, "FUNCIONÓ PERRE");
+                }
+    }//GEN-LAST:event_formKeyTyped
 
     
     public static void main(String args[]) {
@@ -409,7 +394,6 @@ public class AdministracionView extends javax.swing.JFrame {
     public javax.swing.JButton btnEliminar;
     public javax.swing.JButton btnLimpiarBusqueda;
     public javax.swing.JButton btnModificar;
-    public javax.swing.JButton btnPrueba;
     public javax.swing.JButton btnVaciarCampos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

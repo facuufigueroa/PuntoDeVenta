@@ -228,4 +228,42 @@ public class Querys extends ConexionBD{
 
         }
     }
+    
+    /* QUERYS DE PUNTO DE VENTA */
+    
+    public String[] listarProducto(String codigo,DefaultTableModel model){
+        String[] dato= new String[2];
+        
+        Connection conn = getConnection();
+        PreparedStatement ps;
+        ResultSet rs;
+      
+            try{
+                ps=conn.prepareStatement("SELECT * FROM producto WHERE codigo = '"+codigo+"'");
+                rs=ps.executeQuery();
+                
+                if(rs.next()) {
+                    dato[0]=rs.getString("nombre");
+                    dato[1]="$"+rs.getString("precio");
+                    model.addRow(dato);
+                }else{
+                    JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\"> No existe producto buscado.<br/>Verifique que lo registró en el sistema.<br/>O agreguelo en la opcion de AGREGAR PRODUCTO SIN CÓDIGO</p></html>","No existe producto",0);
+                    
+                }
+            } catch(Exception e){
+                 System.out.println(e);
+    }
+            return dato;
+    }
+    
+    public String[] listarOtro(DefaultTableModel model, String[] datos){
+        
+        String[] dato= new String[2];
+        dato=datos;
+        
+        model.addRow(dato);
+           
+        return dato;
+    }
+    
 }

@@ -41,7 +41,6 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.adminView.txtBuscarPorNombre.addKeyListener(this);
         this.adminView.btnLimpiarBusqueda.addActionListener(this);
         this.adminView.btnVaciarCampos.addActionListener(this);
-        adminView.addKeyListener(prueba());
         iniciarJTable();
         
         
@@ -258,7 +257,7 @@ public class AdministracionController implements ActionListener,KeyListener{
                         while (rs.next()) {
                             M_datos[cont][0] = rs.getString("codigo");
                             M_datos[cont][1] = rs.getString("nombre");
-                            M_datos[cont][2] = "$ "+rs.getString("precio");
+                            M_datos[cont][2] = "$"+rs.getString("precio");
                             cont = cont + 1;
                         }
                         dtm_datos = new DefaultTableModel(M_datos, Titulos) {
@@ -357,26 +356,5 @@ public class AdministracionController implements ActionListener,KeyListener{
         this.query = query;
     }
     
-    
-    
-    public KeyListener prueba (){
-        
-        KeyListener k;
-        k = new KeyListener(){
-            @Override
-            public void keyTyped(KeyEvent e) {
-                
-            }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
-                
-            }
-        };
-            return k;
-    }
     
 }

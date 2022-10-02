@@ -257,7 +257,7 @@ public class AdministracionController implements ActionListener,KeyListener{
                         while (rs.next()) {
                             M_datos[cont][0] = rs.getString("codigo");
                             M_datos[cont][1] = rs.getString("nombre");
-                            M_datos[cont][2] = "$ "+rs.getString("precio");
+                            M_datos[cont][2] = "$"+rs.getString("precio");
                             cont = cont + 1;
                         }
                         dtm_datos = new DefaultTableModel(M_datos, Titulos) {

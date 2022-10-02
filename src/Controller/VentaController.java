@@ -1,23 +1,29 @@
 package Controller;
 
 import DataBase.Querys;
+import Model.Compra;
 import Model.Producto;
+import Reporte.Reporte;
 import View.VentaView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import static java.lang.Integer.parseInt;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 
 public final class VentaController implements ActionListener,KeyListener {
     
     private Querys query = new Querys();
     
-    private final VentaView ventaView = new VentaView();
+    public final VentaView ventaView = new VentaView();
     
     DefaultTableModel modeloVenta = new DefaultTableModel();
+    
+    
 
     public VentaController() {
         ventaView.txtCodigo.setFocusable(true);
@@ -29,6 +35,7 @@ public final class VentaController implements ActionListener,KeyListener {
         this.ventaView.btnQuitarProducto.addActionListener(this);
         this.ventaView.txtBuscarCodigo.addKeyListener(accionEnterBuscarCodigo());
         this.ventaView.btnLimpiarBuscar.addActionListener(this);
+        this.ventaView.btnImprimir.addActionListener(this);
         iniciarTabla();
         iniciarcomboBoxRapido();
     }
@@ -69,6 +76,8 @@ public final class VentaController implements ActionListener,KeyListener {
         accionAgregarOtro(e);
         accionBorrarProductoSeleccionado(e);
         limpiarCamposDeBusqueda(e);
+        imprimirTicket(e);
+        
     }
     
     
@@ -139,14 +148,19 @@ public final class VentaController implements ActionListener,KeyListener {
         if(ventaView.txtTotalAPagar.getText().length()!=0){
             if(ventaView.txtPagaCon.getText().length()!=0){
                 int pagaCon = Integer.parseInt(ventaView.txtPagaCon.getText());
-
+                
                 String precioCon$ = ventaView.txtTotalAPagar.getText();
                 int preciosin$ = parseInt(precioCon$.substring(1,precioCon$.length()));
+                if(pagaCon >= preciosin$){    
+                    int vuelto=pagaCon-preciosin$;
 
-                int vuelto=pagaCon-preciosin$;
-
-                ventaView.txtVuelto.setText("$ "+String.valueOf(vuelto));
-            }
+                    ventaView.txtVuelto.setText("$"+String.valueOf(vuelto));
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">El valor ingresado es menor al total."
+                            + "<br>Verifique nuevamente</p></html>");
+                }
+                }
             else{
                 JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">El campo PAGA CON esta vacío</p></html>");
             }
@@ -328,10 +342,35 @@ public final class VentaController implements ActionListener,KeyListener {
         if(e.getSource() == ventaView.btnLimpiarBuscar){
             ventaView.txtNombreBuscado.setText("");
             ventaView.txtPrecioBuscado.setText("");
+            ventaView.txtCodigo.requestFocus();
         }
     }
     
+    public void imprimirTicket(ActionEvent e) {
+        if(e.getSource() == ventaView.btnImprimir){
+            Reporte report = new Reporte();
+            
+            report.conexionReporte(ventaView.txtTotalAPagar.getText(),recorrerJTable());
+        }
+    }
     
+    public ArrayList<Compra> recorrerJTable(){
+        ArrayList<Compra> Resultados = new ArrayList();
+        Compra tipo;
+        
+        Resultados.clear();
+        
+        for (int i = 0; i < ventaView.tablaProductos.getRowCount(); i++) {
+            tipo= new Compra( String.valueOf(ventaView.tablaProductos.getValueAt(i, 0)),String.valueOf(ventaView.tablaProductos.getValueAt(i, 1)));
+            Resultados.add(tipo);
+        }
+        return Resultados;
+      
+    }
+    
+    public String obtenerTotal(){
+        return ventaView.txtTotalAPagar.getText();
+    }
     
     @Override
     public void keyTyped(KeyEvent e) {

@@ -1,12 +1,9 @@
 
 package Reporte;
 
-import Controller.VentaController;
-import DataBase.ConexionBD;
+
 import Model.Compra;
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -17,6 +14,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import net.sf.jasperreports.engine.util.JRLoader;
+import static net.sf.jasperreports.engine.util.JRLoader.getResource;
 import net.sf.jasperreports.view.JasperViewer;
 
 
@@ -26,13 +24,8 @@ public class Reporte {
  
     
     public void conexionReporte(String total,ArrayList<Compra> lista){
-        ConexionBD con = new ConexionBD();
-        Connection conn = con.getConnection();
        
-        Date date = new Date();
         
-        VentaController ventas = new VentaController();
-        JasperPrint jasperPrint; 
         try {
             
             HashMap parametro = new HashMap();
@@ -40,7 +33,9 @@ public class Reporte {
             parametro.put("total", total);
            
     
-            JasperReport jasperMasterReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reporte/ticket.jasper"));
+            
+            JasperReport jasperMasterReport;
+            jasperMasterReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reporte/ticket.jasper"));
           
           
             JasperPrint mostrarReporte = JasperFillManager.fillReport(jasperMasterReport,parametro, new JRBeanCollectionDataSource(lista));

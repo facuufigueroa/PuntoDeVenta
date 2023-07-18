@@ -5,13 +5,20 @@ import Model.Compra;
 import Model.Producto;
 import Reporte.Reporte;
 import View.VentaView;
+import View.VerPrecio;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -23,6 +30,7 @@ public final class VentaController implements ActionListener,KeyListener {
     
     DefaultTableModel modeloVenta = new DefaultTableModel();
     
+    VerPrecio verPrecioView = new VerPrecio();
     
 
     public VentaController() {
@@ -36,6 +44,10 @@ public final class VentaController implements ActionListener,KeyListener {
         this.ventaView.txtBuscarCodigo.addKeyListener(accionEnterBuscarCodigo());
         this.ventaView.btnLimpiarBuscar.addActionListener(this);
         this.ventaView.btnImprimir.addActionListener(this);
+   
+        this.verPrecioView.txtCodigo.addKeyListener(accionVerPrecio());
+        asignarF4BtnVerPrecio();
+        asignarESCBtnVerCerrar();
         iniciarTabla();
         iniciarcomboBoxRapido();
     }
@@ -238,7 +250,7 @@ public final class VentaController implements ActionListener,KeyListener {
 
     
     public void iniciarcomboBoxRapido(){
-        String[] productosRapidos={"","Carnes","Pan","Fiambre","Frutas & Verduras","Chorizo","Morcilla","Alimento"};
+        String[] productosRapidos={"","Carnes","Pan","Fiambre","Frutas & Verduras","Chorizo","Chorizo Seco","Morcilla","Alimento"};
         for(String items : productosRapidos){
             ventaView.cbbNombre.addItem(items);
         }
@@ -387,7 +399,68 @@ public final class VentaController implements ActionListener,KeyListener {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    private void asignarF4BtnVerPrecio() {
+        // Crear y asociar el Action con la tecla F4
+        InputMap inputMap = ventaView.btnVerPrecio.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = ventaView.btnVerPrecio.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("F4"), "pressedF4");
+        actionMap.put("pressedF4", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                verPrecioView.setVisible(true);
+                verPrecioView.setLocationRelativeTo(null);
+                verPrecioView.txtCodigo.setText("");
+                verPrecioView.labelNombre.setText("");
+                verPrecioView.labelPrecio.setText("");
+                verPrecioView.txtCodigo.requestFocus();
+                
+                
+            }
+        });
+
+    }
+   
+    public final KeyListener accionVerPrecio(){
+       
+        KeyListener k = new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    verPrecioView.labelNombre.setText(obtenerPrecioNombreProducto().getNombre());
+                    verPrecioView.labelPrecio.setText("$ "+obtenerPrecioNombreProducto().getPrecio());
+                    verPrecioView.txtCodigo.setText("");
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            };
+            return k;
+    }
     
+    public Producto obtenerPrecioNombreProducto(){
+        return query.obtenerPrecio_nombre(verPrecioView.txtCodigo.getText());
+    }
     
+    /*Método aplicado a btn cerrar de la ventana de ver precio*/
+    private void asignarESCBtnVerCerrar() {
+    // Crear y asociar el Action con la tecla ESC
+    InputMap inputMap = verPrecioView.btnCerrar.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionMap actionMap = verPrecioView.btnCerrar.getActionMap();
+
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "pressedESC");
+    actionMap.put("pressedESC", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Cerrar la ventana verPrecioView
+            verPrecioView.dispose();
+        }
+    });
+}
     
 }

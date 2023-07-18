@@ -266,4 +266,23 @@ public class Querys extends ConexionBD{
         return dato;
     }
     
+    public Producto obtenerPrecio_nombre(String codigo){
+        PreparedStatement ps = null;
+        Connection conn = getConnection();
+        Producto p = new Producto();
+        try {
+            String sql = "SELECT precio,nombre FROM producto WHERE codigo = '" + codigo + "'";
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery(sql);
+            if (rs.next()) {
+                p.setPrecio(Integer.parseInt(rs.getString("precio")));
+                p.setNombre(rs.getString("nombre"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return p;
+    }
 }

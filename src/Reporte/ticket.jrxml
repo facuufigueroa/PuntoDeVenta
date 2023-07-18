@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="141" pageHeight="610" columnWidth="141" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="59249dd6-34d3-4fbc-a688-ce74b18b2db0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="151" pageHeight="612" columnWidth="151" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="59249dd6-34d3-4fbc-a688-ce74b18b2db0">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="286"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -51,21 +51,21 @@ FROM
 	<title>
 		<band height="85" splitType="Stretch">
 			<staticText>
-				<reportElement x="33" y="5" width="70" height="20" uuid="b54a6410-818b-447c-bc73-24071e7e5705"/>
+				<reportElement x="48" y="10" width="70" height="20" uuid="b54a6410-818b-447c-bc73-24071e7e5705"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Lucida Sans" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CHACINADOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="40" y="25" width="48" height="20" uuid="1b3e5f98-e116-453c-b5ec-b4d6f082c53c"/>
+				<reportElement x="55" y="30" width="48" height="20" uuid="1b3e5f98-e116-453c-b5ec-b4d6f082c53c"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Lucida Sans" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BRU-YEN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="33" y="45" width="83" height="20" uuid="0e1cac8c-3b4e-4ffa-9eba-db714bb6d543"/>
+				<reportElement x="48" y="50" width="83" height="20" uuid="0e1cac8c-3b4e-4ffa-9eba-db714bb6d543"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Lucida Sans" isBold="true"/>
 				</textElement>
@@ -85,49 +85,51 @@ FROM
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="97" y="15" width="19" height="20" uuid="2a00ec2e-e062-45cd-90c3-ba96fe793532"/>
-				<imageExpression><![CDATA["C:\\Users\\Facundo\\Desktop\\Work\\PuntoDeVenta-BruYen\\src\\Imagenes\\cerdo.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<detail>
-		<band height="29" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="15" y="1" width="73" height="27" uuid="68a40d47-c8f7-4f02-9061-afa635a24377"/>
+				<reportElement x="15" y="0" width="73" height="27" uuid="68a40d47-c8f7-4f02-9061-afa635a24377"/>
 				<textElement>
 					<font fontName="Lucida Sans Unicode" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="88" y="2" width="28" height="19" uuid="ba28ac4b-b71c-474f-a749-71f0170a6021"/>
+				<reportElement x="88" y="0" width="58" height="19" uuid="ba28ac4b-b71c-474f-a749-71f0170a6021"/>
 				<textElement>
-					<font fontName="Lucida Sans Unicode" size="8"/>
+					<font fontName="Lucida Sans Unicode" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="15" y="28" width="101" height="1" uuid="f373b380-bfbd-4c67-b2ff-9e692885df87"/>
+				<reportElement x="15" y="28" width="131" height="1" uuid="f373b380-bfbd-4c67-b2ff-9e692885df87"/>
 			</line>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="9"/>
+	</pageFooter>
 	<summary>
-		<band height="27">
+		<band height="82">
+			<textField>
+				<reportElement x="61" y="11" width="55" height="20" uuid="8b7af05f-c2bc-4953-a1df-96e7fdc0e584"/>
+				<textElement>
+					<font fontName="Lucida Sans Unicode" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="15" y="0" width="35" height="20" uuid="b9f49220-f593-499f-98e3-379a3e5e4cbb"/>
+				<reportElement x="15" y="11" width="35" height="20" uuid="b9f49220-f593-499f-98e3-379a3e5e4cbb"/>
 				<textElement>
 					<font fontName="Lucida Sans Unicode" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="50" y="0" width="55" height="20" uuid="8b7af05f-c2bc-4953-a1df-96e7fdc0e584"/>
-				<textElement>
-					<font fontName="Lucida Sans Unicode" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
-			</textField>
+			<line>
+				<reportElement x="10" y="50" width="101" height="1" forecolor="#FFFFFF" uuid="004f98a1-91fc-4c0e-bf81-c19d65c29219"/>
+			</line>
 		</band>
 	</summary>
 </jasperReport>

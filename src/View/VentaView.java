@@ -11,6 +11,8 @@ public class VentaView extends javax.swing.JFrame {
 
     public VentaView() {
         initComponents();
+        Estilo.venta(this);
+        AtajosVenta.instalar(this);
     }
     
     @Override

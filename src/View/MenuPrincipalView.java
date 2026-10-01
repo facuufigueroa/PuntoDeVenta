@@ -5,10 +5,12 @@ import java.awt.Toolkit;
 
 
 public class MenuPrincipalView extends javax.swing.JFrame {
+    public final javax.swing.JButton btnBackup = new javax.swing.JButton();
 
     
     public MenuPrincipalView() {
         initComponents();
+        Estilo.menu(this);
     }
 
     

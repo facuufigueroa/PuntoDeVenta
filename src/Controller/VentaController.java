@@ -3,9 +3,11 @@ package Controller;
 import DataBase.Querys;
 import Model.Compra;
 import Model.Producto;
+import Model.TablaVenta;
 import Reporte.Reporte;
 import View.VentaView;
 import View.VerPrecio;
+import View.ConfirmacionView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -28,7 +30,7 @@ public final class VentaController implements ActionListener,KeyListener {
     
     public final VentaView ventaView = new VentaView();
     
-    DefaultTableModel modeloVenta = new DefaultTableModel();
+    DefaultTableModel modeloVenta = new TablaVenta();
     
     VerPrecio verPrecioView = new VerPrecio();
     
@@ -54,8 +56,6 @@ public final class VentaController implements ActionListener,KeyListener {
     
        
     public void iniciarTabla(){
-        modeloVenta.addColumn("Producto");
-        modeloVenta.addColumn("Precio");
         ventaView.tablaProductos.setRowHeight(35);
         ventaView.tablaProductos.setModel(modeloVenta);
        
@@ -198,14 +198,14 @@ public final class VentaController implements ActionListener,KeyListener {
     }
     
     public void accionNuevaCompra(ActionEvent e){
-        String botones[] = {"Aceptar", "Cancelar"};
-        
         if(e.getSource() == ventaView.btnNuevaCompra){
-            int eleccion = JOptionPane.showOptionDialog(null, "<html><p style = \"font:15px\">¿Esta seguro de generar nueva compra?</p></html>", "Nueva Compra", 0, 0, null, botones, this);
-            if (eleccion == JOptionPane.YES_OPTION) {
+            if (ConfirmacionView.confirmar(ventaView, "¿Nueva compra?",
+                    "Se vaciará el carrito actual para comenzar otra compra. Revisá que ya hayas terminado con esta venta.",
+                    "Aceptar")) {
                 modeloVenta.setRowCount(0);
                 vaciarTextFields();
-                ventaView.txtCodigo.requestFocus();
+                ventaView.txtCodigo.setText("");
+                javax.swing.SwingUtilities.invokeLater(() -> ventaView.txtCodigo.requestFocusInWindow());
             }
            
         }
@@ -258,15 +258,14 @@ public final class VentaController implements ActionListener,KeyListener {
     
     public void borrarProductoSeleccionado(){
         int fila = 0;
-        int resp=0;
-        String botones [] = {"Aceptar","Cancelar"};
         try{
             fila=ventaView.tablaProductos.getSelectedRow();
             if(fila==-1){
                 JOptionPane.showMessageDialog(null, "<html><p style = \"font:14px\">Seleccione producto en la tabla que desee quitar</p></html>");  
             }else{
-                resp=JOptionPane.showOptionDialog(null,"<html><p style = \"font:14px\">¿Está seguro quitar el producto?</p></html>","Quitar producto",0,0,null,botones,this);
-                if(resp==JOptionPane.YES_OPTION){
+                if(ConfirmacionView.confirmar(ventaView, "¿Quitar producto?",
+                        "Se quitará del carrito el producto seleccionado. Los demás productos se conservarán.",
+                        "Quitar producto")){
                     restarTotal(fila);
                     modeloVenta.removeRow(fila);
                     actualizarVuelto();
@@ -400,11 +399,10 @@ public final class VentaController implements ActionListener,KeyListener {
     }
     
     private void asignarF4BtnVerPrecio() {
-        // Crear y asociar el Action con la tecla F4
-        InputMap inputMap = ventaView.btnVerPrecio.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        // Shared action for the price button; F4 is bound on the root pane.
         ActionMap actionMap = ventaView.btnVerPrecio.getActionMap();
 
-        inputMap.put(KeyStroke.getKeyStroke("F4"), "pressedF4");
+        // F4 is registered once on the root pane by AtajosVenta.
         actionMap.put("pressedF4", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -431,8 +429,11 @@ public final class VentaController implements ActionListener,KeyListener {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    verPrecioView.labelNombre.setText(obtenerPrecioNombreProducto().getNombre());
-                    verPrecioView.labelPrecio.setText("$ "+obtenerPrecioNombreProducto().getPrecio());
+                    Producto producto = obtenerPrecioNombreProducto();
+                    verPrecioView.labelNombre.setText(producto != null && producto.getNombre() != null
+                            ? producto.getNombre() : "Producto no encontrado");
+                    verPrecioView.labelPrecio.setText(producto != null && producto.getNombre() != null
+                            ? "$ " + producto.getPrecio() : "");
                     verPrecioView.txtCodigo.setText("");
                 }
             }

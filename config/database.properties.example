@@ -1,0 +1,4 @@
+# Copy to database.properties and enter the credentials for your installation.
+url=jdbc:mysql://localhost:3306/bru-yen
+user=root
+password=

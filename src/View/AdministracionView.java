@@ -12,6 +12,7 @@ public class AdministracionView extends javax.swing.JFrame {
     
     public AdministracionView() {
         initComponents();
+        Estilo.administracion(this);
        
     }
     

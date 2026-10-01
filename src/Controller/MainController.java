@@ -4,6 +4,8 @@ import DataBase.Querys;
 import View.AdministracionView;
 import View.MenuPrincipalView;
 import View.VentaView;
+import View.BackupView;
+import Backup.BackupService;
 import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +36,15 @@ public class MainController implements ActionListener{
     public MainController() {
         this.menuPrincipal.btnAdministracion.addActionListener(this);
         this.menuPrincipal.btnPuntoDeVenta.addActionListener(this);
+        try {
+            BackupService backups = new BackupService(java.nio.file.Paths.get("."));
+            this.menuPrincipal.btnBackup.addActionListener(event -> new BackupView(backups).setVisible(true));
+            backups.start();
+            Runtime.getRuntime().addShutdownHook(new Thread(backups::close));
+        } catch (java.io.IOException error) {
+            this.menuPrincipal.btnBackup.addActionListener(event -> javax.swing.JOptionPane.showMessageDialog(
+                    menuPrincipal, "No se pudo iniciar el módulo de backups: " + error.getMessage()));
+        }
     }
     
     

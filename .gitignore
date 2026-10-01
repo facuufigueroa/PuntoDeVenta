@@ -1,2 +1,14 @@
 /build/
 /dist/
+
+# Local settings, credentials and database copies
+/config/*.properties
+/config/*.lock
+/backups/
+/Base de datos/*.sql
+/nbproject/private/
+*.part
+
+# Local development metadata
+/.codex/
+/.agents/

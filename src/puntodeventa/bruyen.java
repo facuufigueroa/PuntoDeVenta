@@ -5,8 +5,10 @@ public class bruyen {
 
     
     public static void main(String[] args) {
-       MainController mainController = new MainController();
-       mainController.loadMenuPrincipal();
+       javax.swing.SwingUtilities.invokeLater(() -> {
+           MainController mainController = new MainController();
+           mainController.loadMenuPrincipal();
+       });
             
     }
     

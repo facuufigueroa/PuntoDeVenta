@@ -16,7 +16,7 @@ public class VerPrecio extends javax.swing.JFrame {
     public VerPrecio() {
         initComponents();
         
-        this.setResizable(false);
+        Estilo.precio(this);
     }
 
     /**

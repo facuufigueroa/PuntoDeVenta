@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteVentas" language="java" pageWidth="595" pageHeight="842" columnWidth="539" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" whenNoDataType="AllSectionsNoDetail">
+  <style name="Base" isDefault="true" fontName="SansSerif" fontSize="9" forecolor="#1F2F2A"/>
+  <parameter name="periodo" class="java.lang.String"/>
+  <parameter name="empresa" class="java.lang.String"><defaultValueExpression><![CDATA["MI EMPRESA"]]></defaultValueExpression></parameter>
+  <parameter name="direccion" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+  <parameter name="contacto" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+  <parameter name="medio" class="java.lang.String"/>
+  <parameter name="generado" class="java.util.Date"/>
+  <parameter name="cantidad" class="java.lang.Integer"/>
+  <parameter name="confirmadas" class="java.lang.Integer"/>
+  <parameter name="anuladas" class="java.lang.Integer"/>
+  <parameter name="bruto" class="java.lang.String"/>
+  <parameter name="anulado" class="java.lang.String"/>
+  <parameter name="neto" class="java.lang.String"/>
+  <parameter name="efectivo" class="java.lang.String"/>
+  <parameter name="tarjeta" class="java.lang.String"/>
+  <parameter name="transferencia" class="java.lang.String"/>
+  <field name="venta" class="java.lang.String"/>
+  <field name="fecha" class="java.util.Date"/>
+  <field name="caja" class="java.lang.String"/>
+  <field name="medio" class="java.lang.String"/>
+  <field name="estado" class="java.lang.String"/>
+  <field name="importe" class="java.lang.String"/>
+  <title><band height="119">
+    <textField isStretchWithOverflow="true"><reportElement x="0" y="0" width="539" height="31" forecolor="#167050"/><textElement><font size="14" isBold="true"/></textElement><textFieldExpression><![CDATA[$P{empresa} + " · REPORTE DE VENTAS"]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="34" width="539" height="16"/><textFieldExpression><![CDATA["Período: " + $P{periodo}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="54" width="539" height="16"/><textFieldExpression><![CDATA["Medio de pago: " + $P{medio}]]></textFieldExpression></textField>
+    <textField pattern="'Generado el 'dd/MM/yyyy HH:mm"><reportElement x="0" y="74" width="539" height="16"/><textFieldExpression><![CDATA[$P{generado}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="98" width="539" height="16"/><textElement><font isBold="true"/></textElement><textFieldExpression><![CDATA[$P{cantidad}.intValue() == 0 ? "Sin ventas para los filtros seleccionados." : "Ventas del período: " + $P{cantidad}]]></textFieldExpression></textField>
+  </band></title>
+  <pageHeader><band height="22"><textField isStretchWithOverflow="true"><reportElement x="0" y="0" width="539" height="16"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$P{empresa} + "  |  " + $P{periodo} + "  |  " + $P{medio}]]></textFieldExpression></textField></band></pageHeader>
+  <columnHeader><band height="25">
+    <staticText><reportElement x="0" y="0" width="50" height="22"/><textElement><font isBold="true"/></textElement><text><![CDATA[Venta]]></text></staticText>
+    <staticText><reportElement x="50" y="0" width="115" height="22"/><textElement><font isBold="true"/></textElement><text><![CDATA[Fecha y hora]]></text></staticText>
+    <staticText><reportElement x="165" y="0" width="45" height="22"/><textElement><font isBold="true"/></textElement><text><![CDATA[Caja]]></text></staticText>
+    <staticText><reportElement x="210" y="0" width="110" height="22"/><textElement><font isBold="true"/></textElement><text><![CDATA[Medio de pago]]></text></staticText>
+    <staticText><reportElement x="320" y="0" width="105" height="22"/><textElement><font isBold="true"/></textElement><text><![CDATA[Estado]]></text></staticText>
+    <staticText><reportElement x="425" y="0" width="114" height="22"/><textElement textAlignment="Right"><font isBold="true"/></textElement><text><![CDATA[Importe]]></text></staticText>
+    <line><reportElement x="0" y="23" width="539" height="1"/><graphicElement><pen lineWidth="0.6" lineColor="#167050"/></graphicElement></line>
+  </band></columnHeader>
+  <detail><band height="24" splitType="Stretch">
+    <textField isStretchWithOverflow="true"><reportElement x="0" y="3" width="50" height="17"/><textFieldExpression><![CDATA[$F{venta}]]></textFieldExpression></textField>
+    <textField pattern="dd/MM/yyyy HH:mm"><reportElement x="50" y="3" width="115" height="17"/><textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression></textField>
+    <textField isStretchWithOverflow="true"><reportElement x="165" y="3" width="45" height="17"/><textFieldExpression><![CDATA[$F{caja}]]></textFieldExpression></textField>
+    <textField><reportElement x="210" y="3" width="110" height="17"/><textFieldExpression><![CDATA[$F{medio}]]></textFieldExpression></textField>
+    <textField><reportElement x="320" y="3" width="105" height="17"/><textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression></textField>
+    <textField isStretchWithOverflow="true"><reportElement x="425" y="3" width="114" height="17"/><textElement textAlignment="Right"/><textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression></textField>
+  </band></detail>
+  <pageFooter><band height="24"><textField><reportElement x="0" y="6" width="539" height="16"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression></textField></band></pageFooter>
+  <summary><band height="215" splitType="Prevent">
+    <line><reportElement x="0" y="8" width="539" height="1"/><graphicElement><pen lineWidth="0.6" lineColor="#167050"/></graphicElement></line>
+    <textField><reportElement x="0" y="22" width="539" height="18"/><textElement><font isBold="true"/></textElement><textFieldExpression><![CDATA["Confirmadas: " + $P{confirmadas} + "  |  Anuladas: " + $P{anuladas}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="46" width="539" height="18"/><textFieldExpression><![CDATA["TOTAL BRUTO: " + $P{bruto}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="68" width="539" height="18"/><textFieldExpression><![CDATA["TOTAL ANULADO: " + $P{anulado}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="92" width="539" height="23" forecolor="#167050"/><textElement><font size="14" isBold="true"/></textElement><textFieldExpression><![CDATA["TOTAL NETO: " + $P{neto}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="126" width="539" height="18"/><textFieldExpression><![CDATA["Efectivo confirmado: " + $P{efectivo}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="148" width="539" height="18"/><textFieldExpression><![CDATA["Tarjeta confirmada: " + $P{tarjeta}]]></textFieldExpression></textField>
+    <textField><reportElement x="0" y="170" width="539" height="18"/><textFieldExpression><![CDATA["Transferencia confirmada: " + $P{transferencia}]]></textFieldExpression></textField>
+    <staticText><reportElement x="0" y="196" width="539" height="17"/><textElement><font size="8"/></textElement><text><![CDATA[Las anulaciones se descuentan del período de la venta original.]]></text></staticText>
+  </band></summary>
+</jasperReport>

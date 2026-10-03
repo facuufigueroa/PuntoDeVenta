@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `bru-yen` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `bru-yen`;
+CREATE DATABASE IF NOT EXISTS `punto_venta` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `punto_venta`;
 
 CREATE TABLE IF NOT EXISTS `producto` (
   `idproducto` int NOT NULL AUTO_INCREMENT,

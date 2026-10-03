@@ -26,6 +26,7 @@ public final class AtajosVenta {
         boton(root, "F7", view.btnQuitarProducto);
         boton(root, "F8", view.btnObtenerVuelto);
         boton(root, "F9", view.btnImprimir);
+        boton(root, "F10", view.btnCobrar);
         accion(root, "F1", () -> JOptionPane.showMessageDialog(view,
                 "F2  ·  Nueva compra (pide confirmación)\n"
                 + "F3  ·  Ir a Paga con\n"
@@ -34,7 +35,8 @@ public final class AtajosVenta {
                 + "F6  ·  Ir a producto sin código\n"
                 + "F7  ·  Quitar el producto seleccionado\n"
                 + "F8  ·  Calcular vuelto\n"
-                + "F9  ·  Imprimir ticket\n\n"
+                + "F9  ·  Imprimir ticket\n"
+                + "F10 ·  Confirmar cobro\n\n"
                 + "Enter en código: agregar producto\n"
                 + "Enter en Paga con: calcular vuelto\n"
                 + "Enter en precio sin código: agregar al carrito\n"
@@ -47,6 +49,7 @@ public final class AtajosVenta {
         view.btnQuitarProducto.setText("Quitar · F7");
         view.btnObtenerVuelto.setText("Calcular vuelto · F8");
         view.btnImprimir.setText("Imprimir ticket · F9");
+        view.btnCobrar.setText("Confirmar cobro · F10");
         view.txtPagaCon.setToolTipText("F3: ingresar pago. Enter: calcular vuelto.");
         view.txtCodigo.setToolTipText("F5: volver al lector. Enter: agregar producto.");
         view.cbbNombre.setToolTipText("F6: agregar un producto sin código.");

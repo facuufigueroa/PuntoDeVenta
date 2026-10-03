@@ -22,8 +22,8 @@ public final class TicketReporteCheck {
 
     public static void main(String[] args) throws Exception {
         // Preserve Java 8 compatibility of the expression classes inside the .jasper file.
-        JasperReport report = new JRJdk13Compiler() {
-            @Override protected String getCompilerClass() { return JRJdk13Compiler.class.getName(); }
+        JasperReport report = new JRJdk13Compiler(DefaultJasperReportsContext.getInstance()) {
+            @Override protected String getCompilerClass(){return JRJdk13Compiler.class.getName();}
             @Override public String compileClasses(File[] files, String classpath) throws JRException {
                 List<String> options = new ArrayList<>(Arrays.asList(
                         "-source", "8", "-target", "8", "-classpath", classpath));

@@ -33,9 +33,23 @@ public final class VentaController implements ActionListener,KeyListener {
     DefaultTableModel modeloVenta = new TablaVenta();
     
     VerPrecio verPrecioView = new VerPrecio();
+    private boolean cobrando;
+    private ArrayList<Compra> ultimoTicket;
+    private String ultimoTotal;
+    private String solicitudCobro, firmaCobro;
+    private final View.AccesoCaja accesoCaja=new View.AccesoCaja();
+    public View.AccesoCaja getAccesoCaja() {return accesoCaja;}
+    private boolean cargandoSinCodigo;
+    private boolean avisoSinCodigo;
     
 
     public VentaController() {
+        ventaView.cbbNombre.addItem("");
+        ventaView.btnSinCodigo.addActionListener(event -> administrarSinCodigo());
+        ventaView.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowActivated(java.awt.event.WindowEvent event) {iniciarcomboBoxRapido();}
+        });
+        ventaView.btnCobrar.addActionListener(event -> confirmarCobro());
         ventaView.txtCodigo.setFocusable(true);
         this.ventaView.txtPagaCon.addKeyListener(accionPagaCon());
         this.ventaView.btnObtenerVuelto.addActionListener(this);
@@ -51,7 +65,63 @@ public final class VentaController implements ActionListener,KeyListener {
         asignarF4BtnVerPrecio();
         asignarESCBtnVerCerrar();
         iniciarTabla();
-        iniciarcomboBoxRapido();
+    }
+
+    private void confirmarCobro() {
+        if(cobrando)return;
+        if(modeloVenta.getRowCount()==0) {View.SonidosWindows.error();JOptionPane.showMessageDialog(ventaView,"Agregá productos antes de cobrar.");return;}
+        accesoCaja.prepararVenta(ventaView,() -> ejecutarCobro());
+    }
+    private void ejecutarCobro() {
+        if (cobrando) return;
+        try {
+            if (modeloVenta.getRowCount() == 0) throw new IllegalArgumentException("Agregá productos antes de cobrar.");
+            java.math.BigDecimal total = java.math.BigDecimal.ZERO;
+            StringBuilder detalle = new StringBuilder();
+            for (int i=0; i<modeloVenta.getRowCount(); i++) {
+                java.math.BigDecimal precio = Caja.CajaService.importe(modeloVenta.getValueAt(i,1).toString().replace("$", ""));
+                total = total.add(precio);
+                detalle.append(modeloVenta.getValueAt(i,0)).append(" · $").append(precio).append('\n');
+            }
+            String medio = (String) ventaView.medioPago.getSelectedItem();
+            if (medio.equals("Efectivo")) {
+                java.math.BigDecimal recibido = Caja.CajaService.importe(ventaView.txtPagaCon.getText());
+                if (recibido.compareTo(total)<0) throw new IllegalArgumentException("El efectivo recibido es menor al total.");
+            }
+            if (!ConfirmacionView.confirmar(ventaView,"¿Confirmar cobro?","Registrar $"+total+" por "+medio+" en la caja abierta y comenzar una nueva compra.","Cobrar")) return;
+            final java.math.BigDecimal monto = total;
+            final String items = detalle.toString();
+            final ArrayList<Compra> ticket = recorrerJTable();
+            String firma = medio+"\n"+items;
+            if(!firma.equals(firmaCobro)) { firmaCobro=firma; solicitudCobro=java.util.UUID.randomUUID().toString(); }
+            final String solicitud = solicitudCobro;
+            cobrando=true;
+            habilitarVenta(ventaView.getContentPane(),false);
+            new javax.swing.SwingWorker<Void,Void>() {
+                protected Void doInBackground() throws Exception {
+                    new Caja.CajaService().cobrar(solicitud,medio,ticket); return null;
+                }
+                protected void done() {
+                    try {
+                        get(); solicitudCobro=null; firmaCobro=null; ultimoTicket=ticket; ultimoTotal="$"+monto; modeloVenta.setRowCount(0); vaciarTextFields(); ventaView.txtCodigo.setText("");
+                        View.SonidosWindows.exito();
+                        JOptionPane.showMessageDialog(ventaView,"Cobro registrado por $"+monto+" ("+medio+").");
+                    } catch(Exception error) {
+                        View.SonidosWindows.error();
+                        JOptionPane.showMessageDialog(ventaView,"No se confirmó el cobro. El carrito se conserva.\n"+(error.getCause()==null ? error.getMessage() : error.getCause().getMessage()));
+                    } finally {
+                        cobrando=false; habilitarVenta(ventaView.getContentPane(),true); ventaView.txtCodigo.requestFocusInWindow();
+                    }
+                }
+            }.execute();
+        } catch(IllegalArgumentException error) { View.SonidosWindows.error();JOptionPane.showMessageDialog(ventaView,error.getMessage()); }
+    }
+
+    private void habilitarVenta(java.awt.Container container, boolean enabled) {
+        for (java.awt.Component component : container.getComponents()) {
+            component.setEnabled(enabled);
+            if (component instanceof java.awt.Container) habilitarVenta((java.awt.Container)component,enabled);
+        }
     }
     
        
@@ -62,14 +132,16 @@ public final class VentaController implements ActionListener,KeyListener {
     }
     
     public void listarEnTabla(String codigo){
+        int antes=modeloVenta.getRowCount();
         query.listarProducto(codigo, modeloVenta);
+        if(modeloVenta.getRowCount()>antes)View.SonidosWindows.producto();
     }
     
     public void loadVentaView(){
-      
-       ventaView.setVisible(true);
-       ventaView.setLocationRelativeTo(null);
-       
+       loadVentaView(ventaView);
+    }
+    public void loadVentaView(javax.swing.JFrame owner) {
+        accesoCaja.prepararVenta(owner,() -> {View.NavegacionVentanas.abrir(owner,ventaView);ventaView.txtCodigo.requestFocusInWindow();});
     }
     
     
@@ -159,12 +231,14 @@ public final class VentaController implements ActionListener,KeyListener {
         
         if(ventaView.txtTotalAPagar.getText().length()!=0){
             if(ventaView.txtPagaCon.getText().length()!=0){
-                int pagaCon = Integer.parseInt(ventaView.txtPagaCon.getText());
+                java.math.BigDecimal pagaCon;
+                try { pagaCon = Caja.CajaService.importe(ventaView.txtPagaCon.getText()); }
+                catch (IllegalArgumentException error) { JOptionPane.showMessageDialog(ventaView,error.getMessage()); return; }
                 
                 String precioCon$ = ventaView.txtTotalAPagar.getText();
                 int preciosin$ = parseInt(precioCon$.substring(1,precioCon$.length()));
-                if(pagaCon >= preciosin$){    
-                    int vuelto=pagaCon-preciosin$;
+                if(pagaCon.compareTo(java.math.BigDecimal.valueOf(preciosin$)) >= 0){
+                    java.math.BigDecimal vuelto=pagaCon.subtract(java.math.BigDecimal.valueOf(preciosin$));
 
                     ventaView.txtVuelto.setText("$"+String.valueOf(vuelto));
                 }
@@ -203,6 +277,7 @@ public final class VentaController implements ActionListener,KeyListener {
                     "Se vaciará el carrito actual para comenzar otra compra. Revisá que ya hayas terminado con esta venta.",
                     "Aceptar")) {
                 modeloVenta.setRowCount(0);
+                solicitudCobro=null; firmaCobro=null;
                 vaciarTextFields();
                 ventaView.txtCodigo.setText("");
                 javax.swing.SwingUtilities.invokeLater(() -> ventaView.txtCodigo.requestFocusInWindow());
@@ -225,12 +300,18 @@ public final class VentaController implements ActionListener,KeyListener {
      
         String otro [] = new String[2];
         if(e.getSource() == ventaView.btnAgregarOtro){
-            if(ventaView.cbbNombre.getSelectedIndex() != 0){
+            if(cargandoSinCodigo || cobrando)return;
+            Object seleccionado=ventaView.cbbNombre.isEditable() ? ventaView.cbbNombre.getEditor().getItem() : ventaView.cbbNombre.getSelectedItem();
+            String nombre=seleccionado==null ? "" : seleccionado.toString().trim();
+            if(!nombre.isEmpty()){
                 if(!"".equals(ventaView.txtPrecio.getText())){
-                  
-                    otro[0]=(String) ventaView.cbbNombre.getSelectedItem();
-                    otro[1]= "$"+ventaView.txtPrecio.getText();     
+                    int precio;
+                    try {precio=parseInt(ventaView.txtPrecio.getText().trim());if(precio<=0 || nombre.length()>255)throw new IllegalArgumentException();}
+                    catch(IllegalArgumentException error){JOptionPane.showMessageDialog(ventaView,"Ingresá un precio positivo en pesos enteros y un nombre de hasta 255 caracteres.");return;}
+                    otro[0]=nombre;
+                    otro[1]= "$"+precio;
                     query.listarOtro(modeloVenta, otro);
+                    View.SonidosWindows.producto();
                     
                     sumarTotal(modeloVenta);
                     ventaView.cbbNombre.setSelectedItem("");
@@ -250,11 +331,30 @@ public final class VentaController implements ActionListener,KeyListener {
 
     
     public void iniciarcomboBoxRapido(){
-        String[] productosRapidos={"","Carnes","Pan","Fiambre","Frutas & Verduras","Chorizo","Chorizo Seco","Morcilla","Alimento"};
-        for(String items : productosRapidos){
-            ventaView.cbbNombre.addItem(items);
-        }
+        if(cargandoSinCodigo || cobrando)return;
+        cargandoSinCodigo=true;
+        Object seleccionado=ventaView.cbbNombre.isEditable() ? ventaView.cbbNombre.getEditor().getItem() : ventaView.cbbNombre.getSelectedItem();
+        boolean manual=ventaView.cbbNombre.getSelectedIndex()<0 || (ventaView.cbbNombre.isEditable() && !java.util.Objects.equals(seleccionado,ventaView.cbbNombre.getSelectedItem()));
+        ventaView.cbbNombre.setEnabled(false);ventaView.btnAgregarOtro.setEnabled(false);
+        new javax.swing.SwingWorker<java.util.List<DataBase.ProductosSinCodigoService.Entrada>,Void>() {
+            protected java.util.List<DataBase.ProductosSinCodigoService.Entrada> doInBackground()throws Exception{return new DataBase.ProductosSinCodigoService().listar(true);}
+            protected void done(){
+                try {
+                    java.util.List<DataBase.ProductosSinCodigoService.Entrada> lista=get();
+                    ventaView.cbbNombre.removeAllItems();ventaView.cbbNombre.addItem("");boolean existe=false;
+                    for(DataBase.ProductosSinCodigoService.Entrada entrada:lista){ventaView.cbbNombre.addItem(entrada.nombre);if(entrada.nombre.equals(seleccionado))existe=true;}
+                    ventaView.cbbNombre.setSelectedItem(existe || manual ? seleccionado : "");
+                    ventaView.cbbNombre.setToolTipText("Opciones guardadas en la base. También podés escribir un nombre ocasional.");
+                    avisoSinCodigo=false;
+                }catch(Exception error){
+                    ventaView.cbbNombre.setToolTipText("No se pudo actualizar la lista de productos sin código.");
+                    if(ventaView.cbbNombre.getItemCount()<=1 && !avisoSinCodigo){avisoSinCodigo=true;JOptionPane.showMessageDialog(ventaView,"No se pudo cargar la lista de productos sin código. Podés escribir un nombre manualmente.\nSi es la primera vez, importá database/productos-sin-codigo.sql.");}
+                }finally{cargandoSinCodigo=false;ventaView.cbbNombre.setEnabled(!cobrando);ventaView.btnAgregarOtro.setEnabled(!cobrando);}
+            }
+        }.execute();
     }
+    public void administrarSinCodigo(){administrarSinCodigo(ventaView);}
+    public void administrarSinCodigo(javax.swing.JFrame padre){View.NavegacionVentanas.abrir(padre,new View.ProductosSinCodigoView(() -> iniciarcomboBoxRapido()));}
     
     public void borrarProductoSeleccionado(){
         int fila = 0;
@@ -303,11 +403,13 @@ public final class VentaController implements ActionListener,KeyListener {
     }
     
     public void actualizarVuelto(){
-        if(ventaView.txtTotalAPagar.getText().length()!=0){
-            int pagaCon = Integer.parseInt(ventaView.txtPagaCon.getText());
+        if(ventaView.txtTotalAPagar.getText().length()!=0 && !ventaView.txtPagaCon.getText().trim().isEmpty()){
+            java.math.BigDecimal pagaCon;
+            try { pagaCon = Caja.CajaService.importe(ventaView.txtPagaCon.getText()); }
+            catch (IllegalArgumentException error) { ventaView.txtVuelto.setText(""); return; }
             int precioTotalsin$ = parseInt(ventaView.txtTotalAPagar.getText().substring(1,ventaView.txtTotalAPagar.getText().length()));
 
-            int vuelto=pagaCon-precioTotalsin$;
+            java.math.BigDecimal vuelto=pagaCon.subtract(java.math.BigDecimal.valueOf(precioTotalsin$));
          
             ventaView.txtVuelto.setText("$"+String.valueOf(vuelto));
         }else{
@@ -361,7 +463,9 @@ public final class VentaController implements ActionListener,KeyListener {
         if(e.getSource() == ventaView.btnImprimir){
             Reporte report = new Reporte();
             
-            report.conexionReporte(ventaView.txtTotalAPagar.getText(),recorrerJTable());
+            if (modeloVenta.getRowCount()>0) report.conexionReporte(ventaView.txtTotalAPagar.getText(),recorrerJTable());
+            else if (ultimoTicket!=null) report.conexionReporte(ultimoTotal,ultimoTicket);
+            else JOptionPane.showMessageDialog(ventaView,"No hay una compra para imprimir.");
         }
     }
     
@@ -407,7 +511,7 @@ public final class VentaController implements ActionListener,KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                verPrecioView.setVisible(true);
+                View.NavegacionVentanas.abrir(ventaView,verPrecioView);
                 verPrecioView.setLocationRelativeTo(null);
                 verPrecioView.txtCodigo.setText("");
                 verPrecioView.labelNombre.setText("");

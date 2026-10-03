@@ -1,0 +1,9 @@
+MANUAL ILUSTRADO Y VIDEO DE VENTA
+
+Manual-ilustrado.pdf: capturas del sistema con recuadros numerados.
+Manual-ilustrado.html: versión para navegador; conservar junto a capturas.
+Venta-paso-a-paso.mp4: video guiado de 90 segundos, con indicaciones en pantalla y sin audio. Puede pausarse en cada paso.
+
+Los productos y operaciones son de ejemplo. Se ejecutó una venta real de $3.000 en una base temporal en memoria, separada de la base del negocio.
+La demo no envía nada a una impresora ni realiza pagos externos.
+Estos materiales se entregan por separado; no se agregaron al instalador.

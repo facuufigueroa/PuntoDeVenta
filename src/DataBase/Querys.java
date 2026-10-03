@@ -140,7 +140,7 @@ public class Querys extends ConexionBD{
         try {
             String sql = "SELECT idproducto FROM producto WHERE codigo = '" + codigo + "'";
             ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery(sql);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 id_producto = rs.getInt(1);
             }
@@ -247,6 +247,7 @@ public class Querys extends ConexionBD{
                     dato[1]="$"+rs.getString("precio");
                     model.addRow(dato);
                 }else{
+                    View.SonidosWindows.error();
                     JOptionPane.showMessageDialog(null,"<html><p style = \"font:15px\"> No existe producto buscado.<br/>Verifique que lo registró en el sistema.<br/>O agreguelo en la opcion de AGREGAR PRODUCTO SIN CÓDIGO</p></html>","No existe producto",0);
                     
                 }
@@ -273,7 +274,7 @@ public class Querys extends ConexionBD{
         try {
             String sql = "SELECT precio,nombre FROM producto WHERE codigo = '" + codigo + "'";
             ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery(sql);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 p.setPrecio(Integer.parseInt(rs.getString("precio")));
                 p.setNombre(rs.getString("nombre"));

@@ -6,6 +6,10 @@ import java.awt.Toolkit;
 
 public class MenuPrincipalView extends javax.swing.JFrame {
     public final javax.swing.JButton btnBackup = new javax.swing.JButton();
+    public final javax.swing.JButton btnCaja = new javax.swing.JButton();
+    public final javax.swing.JButton btnHistorial = new javax.swing.JButton();
+    public final javax.swing.JButton btnSinCodigo = new javax.swing.JButton();
+    public final javax.swing.JButton btnEmpresa = new javax.swing.JButton();
 
     
     public MenuPrincipalView() {
@@ -17,7 +21,7 @@ public class MenuPrincipalView extends javax.swing.JFrame {
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
-        getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
+        getImage(ClassLoader.getSystemResource("Imagenes/icon-app.png"));
   
         return retValue;
     }
@@ -82,7 +86,7 @@ public class MenuPrincipalView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Malgun Gothic", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" SISTEMA DE VENTAS BRU-YEN");
+        jLabel1.setText(" SISTEMA DE VENTAS");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -101,7 +105,7 @@ public class MenuPrincipalView extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo chico.png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-empresa.png"))); // NOI18N
 
         jPanel3.setBackground(new java.awt.Color(0, 153, 0));
 

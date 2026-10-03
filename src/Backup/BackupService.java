@@ -18,7 +18,7 @@ public final class BackupService implements AutoCloseable {
     private final Path settingsFile;
     private final Properties settings = new Properties();
     private final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor(task -> {
-        Thread thread = new Thread(task, "BruYen-backup");
+        Thread thread = new Thread(task, "PuntoVenta-backup");
         thread.setDaemon(true);
         return thread;
     });
@@ -63,7 +63,7 @@ public final class BackupService implements AutoCloseable {
         Files.createDirectories(settingsFile.getParent());
         Path temporary = Files.createTempFile(settingsFile.getParent(), "backup-settings-", ".tmp");
         try {
-            try (OutputStream stream = Files.newOutputStream(temporary)) { settings.store(stream, "Bru-Yen backup settings (no passwords)"); }
+            try (OutputStream stream = Files.newOutputStream(temporary)) { settings.store(stream, "Punto de venta backup settings (no passwords)"); }
             move(temporary, settingsFile, true);
         } finally { Files.deleteIfExists(temporary); }
     }
@@ -137,12 +137,12 @@ public final class BackupService implements AutoCloseable {
         Files.createDirectories(directory);
         URI databaseUrl = URI.create(ConexionBD.URL.substring("jdbc:".length()));
         String database = databaseUrl.getPath().substring(1);
-        String filename = "bru-yen_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))
+        String filename = "punto-venta_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))
                 + "_" + UUID.randomUUID().toString().substring(0, 8) + ".sql";
         Path output = directory.toAbsolutePath().resolve(filename);
         Path partial = Files.createTempFile(directory.toAbsolutePath(), "backup-", ".part");
-        Path credentials = Files.createTempFile("bru-yen-client-", ".cnf");
-        Path log = Files.createTempFile("bru-yen-dump-", ".log");
+        Path credentials = Files.createTempFile("punto-venta-client-", ".cnf");
+        Path log = Files.createTempFile("punto-venta-dump-", ".log");
         Process process = null;
         try {
             protect(credentials);

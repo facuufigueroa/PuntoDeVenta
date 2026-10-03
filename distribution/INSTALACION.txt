@@ -1,0 +1,33 @@
+PUNTO DE VENTA - INSTALACION
+
+1. Instale Java 8 o posterior y MySQL 8 en la PC o servidor del negocio.
+2. Extraiga todo el ZIP en una carpeta propia con permiso de escritura.
+   No ejecute dentro del ZIP ni coloque los archivos en Program Files.
+3. Para una instalacion nueva, importe database/instalar.sql en MySQL.
+   Crea punto_venta y todas las tablas. No trae productos ni ventas reales.
+   Configure un usuario MySQL con acceso a esa base.
+4. Ejecute INICIAR.cmd. En el primer inicio complete URL, usuario y clave.
+   El boton Probar conexion verifica que las tablas esten disponibles.
+5. En Configurar negocio complete nombre, direccion, contacto y logo.
+   Sin logo se muestra LOGO EMPRESA. Los tickets toman los datos configurados.
+6. Configure las copias de seguridad y la ubicacion de mysqldump.
+   Realice una copia manual y compruebe su restauracion en una base de prueba.
+7. Cargue productos, abra caja y realice una venta y una impresion de prueba.
+
+BASE EXISTENTE: conserve su configuracion y backup. Los scripts incrementales
+caja.sql, ventas.sql y productos-sin-codigo.sql deben ejecutarse sobre la base
+seleccionada. No contienen USE ni apuntan a una empresa particular.
+
+NO REEMPLACE config/database.properties, config/empresa.properties ni backups
+al actualizar. La carpeta config es propia de cada cliente. El logo elegido se
+copia alli. Las bibliotecas lib deben acompanhar siempre al JAR.
+
+Tickets: comprobantes internos de compra, no facturacion fiscal electronica.
+Esta version no incluye usuarios/permisos, stock ni integraciones de pago:
+tarjeta y transferencia registran el medio elegido, no realizan el cobro.
+Revise las licencias de terceros antes de distribuir comercialmente; lib
+incluye los avisos disponibles y docs/distribucion.md detalla la revision.
+
+MANUAL DE USUARIO: docs/Manual-de-usuario.pdf (12 paginas A5).
+Tambien disponible desde el menu Inicio > Punto de Venta > Manual de usuario.
+

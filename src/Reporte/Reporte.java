@@ -24,13 +24,19 @@ public class Reporte {
  
     
     public void conexionReporte(String total,ArrayList<Compra> lista){
+        conexionReporte(total,lista,new java.util.Date());
+    }
+
+    public void conexionReporte(String total,ArrayList<Compra> lista,java.util.Date fecha){
        
         
         try {
             
             HashMap parametro = new HashMap();
+            parametro.putAll(Config.EmpresaConfig.actual().parametros());
             
             parametro.put("total", total);
+            parametro.put("fecha", fecha);
            
     
             

@@ -45,6 +45,7 @@ public class AdministracionController implements ActionListener,KeyListener{
         
         
     }
+    public AdministracionView getAdminView(){return adminView;}
 
    @Override
     public void keyReleased(KeyEvent e) {

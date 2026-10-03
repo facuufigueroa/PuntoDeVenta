@@ -9,11 +9,11 @@ import java.util.Properties;
 
 
 public class ConexionBD {
-    
+
     private static final Properties CONFIG = loadConfig();
-    public static final String URL = setting("BRUYEN_DB_URL", "url", "jdbc:mysql://localhost:3306/bru-yen");
-    public static final String USERNAME = setting("BRUYEN_DB_USER", "user", "root");
-    public static final String PASSWORD = setting("BRUYEN_DB_PASSWORD", "password", "");
+    public static final String URL = setting("PDV_DB_URL", "url", "jdbc:mysql://localhost:3306/bru-yen");
+    public static final String USERNAME = setting("PDV_DB_USER", "user", "root");
+    public static final String PASSWORD = setting("PDV_DB_PASSWORD", "password", "1234");
 
     private static Properties loadConfig() {
         Properties properties = new Properties();
@@ -28,19 +28,23 @@ public class ConexionBD {
 
     private static String setting(String environment, String key, String fallback) {
         String value = System.getenv(environment);
+        if(value==null)value=System.getenv(environment.replace("PDV_","BRUYEN_"));
         return value != null ? value : CONFIG.getProperty(key, fallback);
     }
-    
-    
-    
+
+
+
+    public static Connection conectar(String url, String user, String password) throws java.sql.SQLException {
+        return DriverManager.getConnection(url.replaceFirst("^jdbc:mysql:", "jdbc:mariadb:"), user, password);
+    }
     public static Connection getConnection(){
         Connection con = null;
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            con =(Connection) DriverManager.getConnection(URL,USERNAME,PASSWORD);
+
+            con =(Connection) conectar(URL,USERNAME,PASSWORD);
         }catch(Exception e){
-            System.out.println(e);
-            
+            System.err.println("No se pudo conectar a la base de datos. Revisá la configuración de conexión.");
+
         }
         return con;
     }

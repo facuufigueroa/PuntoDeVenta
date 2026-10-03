@@ -34,6 +34,7 @@ public final class AtajosVentaCheck {
                 checkButton(view, "F7", view.btnQuitarProducto);
                 checkButton(view, "F8", view.btnObtenerVuelto);
                 checkButton(view, "F9", view.btnImprimir);
+                checkButton(view, "F10", view.btnCobrar);
                 int[] priceCalls = {0};
                 view.btnVerPrecio.getActionMap().put("pressedF4", new AbstractAction() {
                     @Override public void actionPerformed(ActionEvent event) { priceCalls[0]++; }

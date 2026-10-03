@@ -8,6 +8,9 @@ import javax.swing.JOptionPane;
 
 
 public class VentaView extends javax.swing.JFrame {
+    public final javax.swing.JButton btnCobrar = new javax.swing.JButton();
+    public final javax.swing.JButton btnSinCodigo = new javax.swing.JButton();
+    public final javax.swing.JComboBox<String> medioPago = new javax.swing.JComboBox<>(Caja.CajaService.MEDIOS);
 
     public VentaView() {
         initComponents();
@@ -18,7 +21,7 @@ public class VentaView extends javax.swing.JFrame {
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
-        getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
+        getImage(ClassLoader.getSystemResource("Imagenes/icon-app.png"));
   
         return retValue;
     }
@@ -85,9 +88,9 @@ public class VentaView extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/venta.png"))); // NOI18N
         jLabel2.setText(" PUNTO DE VENTA");
 
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo venta.png"))); // NOI18N
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-empresa.png"))); // NOI18N
 
-        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo venta.png"))); // NOI18N
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-empresa.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -473,7 +476,7 @@ public class VentaView extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("O PRESIONE EL BOTON \"OBTENER VUELTO\"");
 
-        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo chico.png"))); // NOI18N
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-empresa.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

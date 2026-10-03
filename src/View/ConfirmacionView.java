@@ -18,10 +18,10 @@ public final class ConfirmacionView extends JDialog {
         JPanel content = new JPanel(new BorderLayout(0, 22));
         content.setBackground(Color.WHITE);
         content.setBorder(new EmptyBorder(28, 28, 24, 28));
-        JLabel badge = new JLabel("BRU-YEN  /  CONFIRMACIÓN");
+        JLabel badge = new JLabel(Config.EmpresaConfig.actual().nombre+"  /  CONFIRMACIÓN");
         badge.setFont(new Font("Segoe UI", Font.BOLD, 12));
         badge.setForeground(new Color(22, 112, 80));
-        badge.setIcon(Estilo.imagen("logo venta.png", 60, 36));
+        badge.setIcon(MarcaEmpresa.logo(60,36));
         badge.setIconTextGap(12);
         content.add(badge, BorderLayout.NORTH);
         JPanel text = new JPanel(new BorderLayout(0, 12));
@@ -76,6 +76,7 @@ public final class ConfirmacionView extends JDialog {
 
     public static boolean confirmar(JFrame owner, String title, String message, String acceptText) {
         ConfirmacionView dialog = new ConfirmacionView(owner, title, message, acceptText);
+        SonidosWindows.confirmar();
         dialog.setVisible(true);
         return dialog.isAceptado();
     }

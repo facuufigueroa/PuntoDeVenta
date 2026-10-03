@@ -1,22 +1,32 @@
-# Punto de venta Bru-Yen
+﻿# Punto de venta
 
-Aplicación de escritorio Java Swing con catálogo de productos, venta por código de barras, consulta de precios, tickets JasperReports y backups semanales.
+Sistema de escritorio Java Swing para ventas, catálogo, caja, historial, reimpresión de tickets, gráficos, reportes PDF y copias de seguridad.
 
-## Configuración
+## Instalar en otra PC
 
-1. Abrí el proyecto en NetBeans con JDK 8 o posterior.
-2. Configurá las bibliotecas de MySQL y JasperReports 6.0.0. Las referencias actuales de `nbproject/project.properties` corresponden al entorno de desarrollo y pueden requerir ajustes en otra PC.
-3. Para una instalación nueva, importá `database/schema.sql` en MySQL. Solo contiene la estructura, sin productos reales.
-4. Copiá `config/database.properties.example` a `config/database.properties` y completá las credenciales locales. También se admiten las variables `BRUYEN_DB_URL`, `BRUYEN_DB_USER` y `BRUYEN_DB_PASSWORD`, que tienen prioridad sobre el archivo.
-5. Ejecutá `puntodeventa.bruyen` desde la carpeta del proyecto. La configuración y los backups se resuelven respecto de la carpeta desde la que se inicia la aplicación.
+El paquete ZIP de `dist/` contiene el programa, sus bibliotecas y las instrucciones `INSTALACION.txt`. Requiere Java 8 o posterior y un servidor MySQL 8. Importá `database/instalar.sql` para una instalación nueva; luego ejecutá `INICIAR.cmd` y completá el asistente de conexión.
 
-## Funciones y documentación
+Desde **Configurar negocio** podés cambiar nombre, dirección, contacto, mensaje del ticket y logo. La identidad inicial muestra **LOGO EMPRESA / MI EMPRESA**. Los datos se guardan localmente en `config/`.
 
-- [Atajos de teclado](docs/atajos.md)
-- [Copias de seguridad](docs/backups.md)
-- [Ticket de supermercado](docs/reporte.md)
-- [Vistas previas](docs/apariencia)
+Para una base existente conservá la configuración e importá únicamente las migraciones pendientes: `caja.sql`, `ventas.sql` y `productos-sin-codigo.sql`. No importes `instalar.sql` sobre una instalación existente. Hacé un backup antes de actualizar.
 
-El módulo de backups comprueba la copia semanal al abrir el sistema y cada 30 minutos mientras permanece abierto. Recupera la copia pendiente cuando un lunes el negocio está cerrado.
+## Generar el paquete
 
-Las credenciales, los backups, las exportaciones reales de la base, los archivos privados de NetBeans y las carpetas de compilación se excluyen de Git.
+Con JDK 17 o posterior: `powershell -ExecutionPolicy Bypass -File tools/empaquetar.ps1`. También admite `-JdkHome`. El proyecto NetBeans usa bibliotecas relativas de `lib/`; la clase principal es `puntodeventa.Main`. Las dependencias seleccionadas están en `tools/runtime-libs.txt`.
+
+El paquete no incluye credenciales, logo de clientes, productos reales ni backups. Las variables `PDV_DB_URL`, `PDV_DB_USER` y `PDV_DB_PASSWORD` tienen prioridad sobre `config/database.properties`.
+
+## Documentación
+
+- [Caja](docs/caja.md)
+- [Historial y tickets](docs/historial-ventas.md)
+- [Gráficos](docs/graficos-ventas.md)
+- [Reporte de ventas](docs/reporte-ventas.md)
+- [Productos sin código](docs/productos-sin-codigo.md)
+- [Backups](docs/backups.md)
+- [Distribución y alcance](docs/distribucion.md)
+
+## Manual para el usuario
+
+[Manual de usuario PDF](docs/Manual-de-usuario.pdf), de 12 páginas A5, y [versión para navegador](docs/Manual-de-usuario.html). Para imprimir como librito, usá la opción Folleto del lector PDF; para hojas individuales, seleccioná A5 o ajustar al papel disponible. El texto editable está en docs/manual-usuario.md y se regenera al empaquetar. El instalador agrega un acceso al manual en el menú Inicio.
+

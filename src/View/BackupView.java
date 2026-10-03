@@ -132,9 +132,11 @@ public final class BackupView extends JFrame {
                 backup.setEnabled(true); save.setEnabled(true);
                 try {
                     Path file = get();
+                    SonidosWindows.exito();
                     JOptionPane.showMessageDialog(BackupView.this, "Copia guardada en:\n" + file,
                             "Backup completado", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception error) {
+                    SonidosWindows.error();
                     JOptionPane.showMessageDialog(BackupView.this, service.getStatus(),
                             "No se pudo hacer el backup", JOptionPane.ERROR_MESSAGE);
                 }

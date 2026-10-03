@@ -36,9 +36,14 @@ public class MainController implements ActionListener{
     public MainController() {
         this.menuPrincipal.btnAdministracion.addActionListener(this);
         this.menuPrincipal.btnPuntoDeVenta.addActionListener(this);
+        this.menuPrincipal.btnCaja.addActionListener(event -> View.NavegacionVentanas.abrir(menuPrincipal,new View.CajaView()));
+        this.menuPrincipal.btnHistorial.addActionListener(event -> View.NavegacionVentanas.abrir(menuPrincipal,new View.HistorialVentasView()));
+        this.menuPrincipal.btnSinCodigo.addActionListener(event -> ventaController.administrarSinCodigo(menuPrincipal));
+        this.menuPrincipal.btnEmpresa.addActionListener(event -> View.NavegacionVentanas.abrir(menuPrincipal,new View.EmpresaView()));
+        this.adminController.getAdminView().btnSinCodigo.addActionListener(event -> ventaController.administrarSinCodigo(adminController.getAdminView()));
         try {
             BackupService backups = new BackupService(java.nio.file.Paths.get("."));
-            this.menuPrincipal.btnBackup.addActionListener(event -> new BackupView(backups).setVisible(true));
+            this.menuPrincipal.btnBackup.addActionListener(event -> View.NavegacionVentanas.abrir(menuPrincipal,new BackupView(backups)));
             backups.start();
             Runtime.getRuntime().addShutdownHook(new Thread(backups::close));
         } catch (java.io.IOException error) {
@@ -51,6 +56,7 @@ public class MainController implements ActionListener{
     public void loadMenuPrincipal(){
         menuPrincipal.setVisible(true);
         menuPrincipal.setLocationRelativeTo(null);
+        ventaController.getAccesoCaja().revisarInicio(menuPrincipal);
       
     }
     
@@ -59,24 +65,24 @@ public class MainController implements ActionListener{
         if(e.getSource() == menuPrincipal.btnAdministracion){
             
             adminController.loadAdminView();
+            View.NavegacionVentanas.abrir(menuPrincipal,adminController.getAdminView());
         }
     }
     
     public void loadAdministracion(){
-        getAdminView().setVisible(true);
+        View.NavegacionVentanas.abrir(menuPrincipal,getAdminView());
         getAdminView().setLocationRelativeTo(null);
     }
     
     
    public void accionBtnPVenta(ActionEvent e){
        if(e.getSource() == menuPrincipal.btnPuntoDeVenta){
-            ventaController.loadVentaView();
+            ventaController.loadVentaView(menuPrincipal);
         }
    }
     
    public void loadPuntoDeVenta(){
-       getVentaView().setVisible(true);
-       getVentaView().setLocationRelativeTo(null);
+       ventaController.loadVentaView(menuPrincipal);
    }    
     
     

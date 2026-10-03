@@ -214,12 +214,13 @@ public final class Estilo {
         titles.add(Box.createVerticalStrut(6));
         titles.add(label(subtitle, 14, MUTED));
         heading.add(titles, BorderLayout.CENTER);
-        JLabel logo = new JLabel(imagen("logo venta.png", 94, 58));
-        logo.setToolTipText("Chacinados Bru-Yen");
+        JLabel logo = MarcaEmpresa.etiquetaLogo(94,58);
         heading.add(logo, BorderLayout.WEST);
         root.add(heading, BorderLayout.NORTH);
         frame.setContentPane(root);
-        frame.setTitle("Bru-Yen · " + title);
+        frame.getRootPane().putClientProperty("tituloVista",title);
+        frame.setTitle(Config.EmpresaConfig.actual().nombre+" · "+title);
+        frame.setIconImage(MarcaEmpresa.icono());
         frame.setResizable(true);
         return root;
     }
@@ -232,24 +233,39 @@ public final class Estilo {
 
     public static void menu(MenuPrincipalView view) {
         JPanel root = shell(view, "Inicio", "Todo listo para una nueva jornada.");
-        JPanel cards = new JPanel(new GridLayout(1, 2, 20, 0));
+        JPanel cards = new JPanel(new GridLayout(1, 3, 16, 0));
         cards.setOpaque(false);
-        JPanel sale = card("Nueva venta", "Cobrá productos y prepará el ticket.");
-        sale.add(label("Una caja simple, rápida y a mano.", 14, MUTED), BorderLayout.CENTER);
-        sale.add(button(view.btnPuntoDeVenta, "Abrir punto de venta →", true), BorderLayout.SOUTH);
-        JPanel products = card("Productos", "Administrá el catálogo de tu almacén.");
-        products.add(label("Consultá y actualizá tus precios.", 14, MUTED), BorderLayout.CENTER);
-        products.add(button(view.btnAdministracion, "Administrar productos →", false), BorderLayout.SOUTH);
+        JPanel sale = card("Nueva venta", "Productos, cobros y tickets.");
+        sale.add(label("Todo listo para vender.", 14, MUTED), BorderLayout.CENTER);
+        JPanel saleActions = column();
+        saleActions.add(button(view.btnPuntoDeVenta, "Iniciar venta →", true));
+        saleActions.add(Box.createVerticalStrut(8));
+        saleActions.add(button(view.btnHistorial, "Historial de ventas", false));
+        sale.add(saleActions, BorderLayout.SOUTH);
+        JPanel products = card("Productos", "El catálogo de tu almacén.");
+        products.add(label("Consultá y actualizá precios.", 14, MUTED), BorderLayout.CENTER);
+        JPanel productActions=column();
+        productActions.add(button(view.btnAdministracion,"Ver productos →",false));
+        productActions.add(Box.createVerticalStrut(8));
+        productActions.add(button(view.btnSinCodigo,"Productos sin código",false));
+        products.add(productActions,BorderLayout.SOUTH);
+        JPanel cash = card("Caja", "Apertura, movimientos y cierre.");
+        cash.add(label("Controlá el efectivo del turno.", 14, MUTED), BorderLayout.CENTER);
+        view.btnCaja.setIcon(imagen("metodo-de-pago.png", 22, 22));
+        cash.add(button(view.btnCaja, "Control de caja →", false), BorderLayout.SOUTH);
         cards.add(sale);
         cards.add(products);
+        cards.add(cash);
         root.add(cards, BorderLayout.CENTER);
         JPanel footer = new JPanel(new BorderLayout(12, 0));
         footer.setOpaque(false);
-        footer.add(label("BRU-YEN · Sistema de ventas", 12, MUTED), BorderLayout.WEST);
+        JLabel pie=label(Config.EmpresaConfig.actual().nombre+" · Sistema de ventas",12,MUTED);pie.putClientProperty("pieEmpresa",true);
+        footer.add(pie,BorderLayout.WEST);
+        footer.add(row(button(view.btnEmpresa,"Configurar negocio",false)),BorderLayout.CENTER);
         view.btnBackup.setIcon(imagen("paquete.png", 22, 22));
         footer.add(button(view.btnBackup, "Copias de seguridad", false), BorderLayout.EAST);
         root.add(footer, BorderLayout.SOUTH);
-        finish(view, 860, 440);
+        finish(view, 1100, 440);
     }
 
     public static void venta(VentaView view) {
@@ -268,7 +284,8 @@ public final class Estilo {
         quickFields.add(field("Precio", view.txtPrecio));
         quick.add(quickFields);
         quick.add(row(button(view.btnAgregarOtro, "Agregar al carrito", true),
-                button(view.btnQuitarProducto, "Quitar seleccionado", false)));
+                button(view.btnQuitarProducto, "Quitar seleccionado", false),
+                button(view.btnSinCodigo,"Administrar sin código",false)));
         cartBody.add(quick, BorderLayout.SOUTH);
         cart.add(cartBody, BorderLayout.CENTER);
         body.add(cart, BorderLayout.CENTER);
@@ -290,7 +307,12 @@ public final class Estilo {
         view.txtVuelto.setForeground(GREEN);
         view.txtVuelto.setFont(new Font("Segoe UI", Font.BOLD, 24));
         payment.add(amounts, BorderLayout.CENTER);
-        payment.add(button(view.btnImprimir, "Imprimir ticket", true), BorderLayout.SOUTH);
+        amounts.add(field("Medio de pago", view.medioPago));
+        JPanel cobro = column();
+        cobro.add(button(view.btnCobrar, "Confirmar cobro", true));
+        cobro.add(Box.createVerticalStrut(8));
+        cobro.add(button(view.btnImprimir, "Imprimir ticket", false));
+        payment.add(cobro, BorderLayout.SOUTH);
         sidebar.add(payment, BorderLayout.NORTH);
         JPanel search = card("Consultar precio", "Ingresá un código y presioná Enter.");
         JPanel searchFields = column();
@@ -360,6 +382,7 @@ public final class Estilo {
         body.add(catalog, BorderLayout.CENTER);
         root.add(body, BorderLayout.CENTER);
         finish(view, 1120, 700);
+        root.add(row(button(view.btnSinCodigo,"Administrar productos sin código",false)),BorderLayout.SOUTH);
     }
 
     public static void precio(VerPrecio view) {

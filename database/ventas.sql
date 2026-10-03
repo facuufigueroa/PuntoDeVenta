@@ -1,0 +1,22 @@
+-- Ejecutar después de caja.sql en la base configurada.
+CREATE TABLE IF NOT EXISTS venta (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ movimiento BIGINT NOT NULL UNIQUE,
+ solicitud VARCHAR(36) NOT NULL UNIQUE,
+ FOREIGN KEY (movimiento) REFERENCES caja_movimiento(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS venta_item (
+ id BIGINT PRIMARY KEY AUTO_INCREMENT,
+ venta BIGINT NOT NULL,
+ nombre VARCHAR(255) NOT NULL,
+ precio DECIMAL(14,2) NOT NULL,
+ FOREIGN KEY (venta) REFERENCES venta(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS venta_anulacion (
+ movimiento BIGINT PRIMARY KEY,
+ ajuste BIGINT NOT NULL UNIQUE,
+ fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ motivo VARCHAR(1000) NOT NULL,
+ FOREIGN KEY (movimiento) REFERENCES caja_movimiento(id),
+ FOREIGN KEY (ajuste) REFERENCES caja_movimiento(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

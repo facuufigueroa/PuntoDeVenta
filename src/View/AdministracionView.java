@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 
 public class AdministracionView extends javax.swing.JFrame {
+    public final javax.swing.JButton btnSinCodigo = new javax.swing.JButton();
 
     
     public AdministracionView() {
@@ -19,7 +20,7 @@ public class AdministracionView extends javax.swing.JFrame {
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
-        getImage(ClassLoader.getSystemResource("Imagenes/icon.png"));
+        getImage(ClassLoader.getSystemResource("Imagenes/icon-app.png"));
   
         return retValue;
     }
@@ -212,7 +213,7 @@ public class AdministracionView extends javax.swing.JFrame {
         btnVaciarCampos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/campo-de-texto.png"))); // NOI18N
         btnVaciarCampos.setText("Vaciar Campos");
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo chico.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-empresa.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
